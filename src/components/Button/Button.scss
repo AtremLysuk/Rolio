@@ -1,0 +1,52 @@
+@use '../../scss/helpers/' as *;
+
+.button {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 2.28571;
+  text-align: center;
+  transition: all .3s ease;
+  will-change: color background-color;
+  background-color: transparent;
+  border-radius: 50px;
+  cursor: pointer ;
+
+  &--emerald {
+    color: var(--color-emerald);
+    border: 1px solid var(--color-emerald);
+
+    @include hover {
+      background: linear-gradient(320deg, #076534 0%, #00db69 100%);
+      color: var(--color-white);
+    }
+
+  }
+
+  &--green {
+    color: var(--color-green);
+    border: 1px solid var(--color-green);
+
+    @include hover {
+      background: linear-gradient(321deg, #536614 0%, #97c20b 100%);
+      color: var(--color-white);
+    }
+  }
+  &--red {
+    color: var(--color-red);
+    border: 1px solid var(--color-red);
+
+    @include hover {
+      background: linear-gradient(321deg, #99160e 0%, #e84239 100%);
+      color: var(--color-white);
+    }
+  }
+  &--orange {
+    color: var(--color-orange);
+    border: 1px solid var(--color-orange);
+
+    @include hover {
+      background: linear-gradient(324deg, #ba6400 0%, #ff9d34 100%);
+      color: var(--color-white);
+    }
+  }
+}

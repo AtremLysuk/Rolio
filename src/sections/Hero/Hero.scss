@@ -1,0 +1,23 @@
+.hero {
+
+  // .hero__container
+
+  &__container {
+  }
+
+  // .hero__inner
+
+  &__inner {
+  }
+
+  // .hero__slider
+
+  &__slider {
+
+    @media(width <= 1366px) {
+     max-height: 504px;
+    }
+  }
+}
+.container {
+}
