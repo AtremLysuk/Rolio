@@ -1,10 +1,6 @@
 @use '../../scss/helpers/' as *;
 
 .header {
-  &__container {
-    border-right: 1px solid red;
-    border-left: 1px solid red;
-  }
 
   &__inner {
     margin-top: 55px;
@@ -14,6 +10,10 @@
     @media (width <= 1366px) {
       margin-top: 0px;
     }
+
+    @media (width <= 767.98px) {
+      padding-top: 15px;
+    }
   }
 
   &__logo {
@@ -21,23 +21,33 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 101;
 
     @media (width <= 1366px) {
-      width: 212px;
-      height: 212px;
+      width: 140px;
+      height: 140px;
     }
 
     @media (width <= 1100px) {
       width: 180px;
       height: 180px;
     }
-    @media(width <= 900px) {
+    @media (width <= 900px) {
       width: 128px;
       height: 128px;
-
     }
 
-    &::before{
+    @media (width <= 767.98px) {
+      margin-left: 35px;
+      width: 37px;
+      height: 75px;
+    }
+
+    @media (width <= 400px) {
+      margin-left: 15px;
+    }
+
+    &::before {
       position: absolute;
 
       content: '';
@@ -49,20 +59,27 @@
       background: var(--color-green);
       z-index: -1;
 
-      @media(width <= 1366px) {
+      @media (width <= 1366px) {
+        width: 180px;
+        height: 180px;
         left: 5%;
-        bottom: -10%;
+        bottom: -9%;
       }
-      @media(width <= 1100px) {
-        left: 0%;
-        bottom: -10%;
+      @media (width <= 1100px) {
+        left: 14%;
+        bottom: 0%;
       }
 
-      @media(width <= 900px) {
+      @media (width <= 900px) {
         width: 128px;
         height: 128px;
         left: 0;
         bottom: 0;
+      }
+
+      @media (width <= 767.98px) {
+        left: -120%;
+        bottom: -24%;
       }
     }
 
@@ -71,8 +88,8 @@
       width: fluid(76, 37);
       height: fluid(155, 75);
 
-      @media(width <= 900px) {
-       margin-left: 0px;
+      @media (width <= 900px) {
+        margin-left: 0px;
       }
 
       path {
@@ -86,7 +103,7 @@
     align-self: center;
 
     @media (width <= 1366px) {
-      margin-left: fluid(170, 0);
+      margin-left: fluid(230, 0);
     }
 
     @media (width <= 1100px) {
@@ -119,21 +136,37 @@
       text-align: center;
       color: var(--color-green);
     }
+
+    &-active{
+      display: block;
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      inset: 0;
+      background-color: var(--color-green);
+      z-index: 200;
+    }
   }
 
   &__burger-button {
+    position: relative;
     display: none;
     width: 40px;
     height: 40px;
-
     margin-left: auto;
     margin-right: 25px;
     background: transparent;
     border: none;
     cursor: pointer;
+    z-index: 400;
+
 
     @media (width <= 920px) {
       display: block;
+    }
+
+    @media (width <= 400px) {
+      margin-right: 10px;
     }
 
     &--line {
@@ -171,32 +204,66 @@
     &.active {
       .header__burger-button--line {
         background: transparent;
+        
 
         &::before {
           transform: rotate(-45deg) translate(6px, -5px);
+          background-color: #fff;
         }
 
         &::after {
           transform: rotate(45deg) translate(6px, 5px);
+          background-color: #fff;
         }
       }
     }
   }
 
   &__cart {
+    position: relative;
     cursor: pointer;
 
     @media (width > 920px) {
-    margin-left: auto;
+      margin-left: auto;
     }
 
     @media (width <= 1450px) {
       margin-right: fluid(70, 20);
     }
 
+    @media (width <= 400px) {
+      margin-right: 10px;
+    }
+
     svg {
       path {
         fill: var(--color-green);
+      }
+    }
+
+    &-button {
+      background-color: transparent;
+      border: none;
+    }
+
+    &-total {
+      position: absolute;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      top: -10px;
+      right: -10px;
+      width: 24px;
+      height: 24px;
+      border-radius: 100%;
+      background-color: var(--color-red);
+      font-weight: 400;
+      font-size: 16px;
+      text-align: center;
+      color: #fff;
+      
+      @media(width <= 600px) {
+       font-size: 14px;
       }
     }
   }

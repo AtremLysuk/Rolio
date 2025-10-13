@@ -1,0 +1,96 @@
+@use '../../scss/helpers/' as *;
+.footer {
+  padding-block: var(--sectionPadding-y);
+  background-color: #728536;
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  @media (width <= 950px) {
+    flex-direction: column;
+    gap: 40px;
+  }
+}
+.logo {
+  a {
+    padding: 40px;
+
+    @media (width <= 950px) {
+      padding-block: 0;
+      padding-inline: auto;
+    }
+
+    svg {
+      path {
+        fill: #fff;
+      }
+      @include hover {
+        path {
+          fill: var(--color-accent);
+        }
+      }
+    }
+  }
+}
+.menu {
+  &List {
+    display: flex;
+    align-items: center;
+    gap: 80px;
+
+    @include laptop {
+      gap: 40px;
+    }
+
+    @media(width <= 600px) {
+     flex-direction: column;
+     gap: 16px;
+    }
+  }
+
+  &Item {
+  }
+  &Link {
+    font-weight: 300;
+    font-size: 18px;
+    line-height: 1.33333;
+    text-align: center;
+    color: #fff;
+    text-decoration: none;
+  }
+}
+
+.socia1s {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+
+  @include laptop {
+    gap: 24px;
+  }
+
+  &Item {
+  }
+
+  &Link {
+    text-decoration: none;
+    svg {
+      path {
+        fill: #fff;
+      }
+
+      @include hover {
+        path {
+          fill: var(--color-accent);
+        }
+      }
+    }
+  }
+
+  &Icon {
+  }
+}

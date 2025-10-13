@@ -15,21 +15,25 @@ type TImages = {
 export type Color = 'green' | 'red' | 'orange' | 'emerald';
 
 export type TSlideData = {
+  id: number;
   title: string;
   subtitle: string;
   text: string;
   images: TImages[];
   color: Color;
+  cartImgSrc: string;
+  price: number;
   slideHandler?: (index: number) => void;
 };
 
-const Hero = () => {
+const Hero: React.FC = () => {
   const swiperRef = useRef<any | null>(null);
 
   const [activeSlide, setActiveSlide] = useState<number>(1);
 
   const slidesData: TSlideData[] = [
     {
+      id: 1,
       title: 'Масло “Для салата”',
       subtitle: 'Наши продукты',
       text: 'Название говорит само за себя. Это идеальная заправка, которая даже скучной и привычной капусте придаст неповторимый вкус и аромат.',
@@ -53,9 +57,12 @@ const Hero = () => {
           height: 267,
         },
       ],
+      cartImgSrc: '/images/cart/cartSalatIImage.png',
       color: 'green',
+      price: 125,
     },
     {
+      id: 2,
       title: 'Масло “Итальянское”',
       subtitle: 'Наши продукты',
       text: 'Идеальное решение для легкого и быстрого маринада мяса, можно добавить капельку масла и после приготовления.',
@@ -79,9 +86,12 @@ const Hero = () => {
           height: 300,
         },
       ],
+      cartImgSrc: '/images/cart/cartItalyImage.png',
       color: 'emerald',
+      price: 125,
     },
     {
+      id: 3,
       title: 'Масло “Для мяса”',
       subtitle: 'Наши продукты',
       text: 'Идеальное решение для легкого и быстрого маринада мяса, можно добавить капельку масла и после приготовления.',
@@ -105,9 +115,12 @@ const Hero = () => {
           height: 300,
         },
       ],
+      cartImgSrc: '/images/cart/cartMeatImage.png',
       color: 'red',
+      price: 125,
     },
     {
+      id: 4,
       title: 'Масло “Восточное”',
       subtitle: 'Наши продукты',
       text: 'Идеальное решение для легкого и быстрого маринада мяса, можно добавить капельку масла и после приготовления.',
@@ -131,9 +144,12 @@ const Hero = () => {
           height: 300,
         },
       ],
+      cartImgSrc: '/images/cart/cartVostochnoeImage.png',
       color: 'orange',
+      price: 125,
     },
   ];
+
 
   return (
     <section className="hero">

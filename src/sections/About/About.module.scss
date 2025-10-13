@@ -1,0 +1,157 @@
+@use '../../scss/helpers/' as *;
+
+.about {
+  padding-bottom: var(--sectionPadding-y);
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 40px;
+}
+.items {
+  display: grid;
+  row-gap: 32px;
+}
+.item {
+  position: relative;
+  display: flex;
+  justify-content: center;
+
+  @media (width <= 900px) {
+    flex-direction: column;
+  }
+
+  &--right {
+    flex-direction: row-reverse;
+    position: relative;
+
+    @media (width <= 900px) {
+      flex-direction: column;
+    }
+
+    &::before {
+      position: absolute;
+      content: '';
+
+      height: 90%;
+      width: 12%;
+      background-color: var(--color-green);
+      right: 0;
+      top: 10%;
+      opacity: 0.4;
+
+      @media (width <= 900px) {
+        height: 70%;
+        width: 45%;
+      }
+    }
+
+    .image {
+      position: relative;
+      transform: translateX(-8%);
+      z-index: 1;
+
+      @media (width <= 900px) {
+        transform: translateX(0);
+      }
+    }
+
+    img {
+      max-width: 100%;
+      @media (width <= 900px) {
+        margin-inline: auto;
+        object-fit: cover;
+      }
+    }
+  }
+
+  &--left {
+    &::before {
+      position: absolute;
+      content: '';
+
+      height: 90%;
+      width: 12%;
+      background-color: var(--color-green);
+      left: 0;
+      top: 10%;
+      opacity: 0.4;
+
+      @media (width <= 900px) {
+        height: 70%;
+        width: 45%;
+      }
+    }
+
+    img {
+      max-width: 100%;
+      img {
+        max-width: 100%;
+      }
+    }
+
+    .image {
+      position: relative;
+      transform: translateX(8%);
+      z-index: 1;
+
+      @media (width <= 900px) {
+        transform: translateX(0);
+        @media (width <= 900px) {
+          margin-inline: auto;
+        }
+      }
+    }
+  }
+}
+
+.image {
+  position: relative;
+}
+
+.content {
+  margin-top: 48px;
+  padding: 48px;
+  box-shadow: 10px 10px 35px 0 rgba(190, 191, 183, 0.1);
+  background: #fff;
+  flex-basis: 61%;
+  position: relative;
+  z-index: 2;
+
+  @media (width <= 900px) {
+    margin-top: 0px;
+    padding: 24px;
+    max-width: 90%;
+    margin-left: auto;
+  }
+
+  @media (width <= 650px) {
+    min-width: 100%;
+  }
+
+  &--left {
+    @media (width <= 900px) {
+      margin-right: auto;
+    }
+  }
+}
+.contentTitle {
+  margin-bottom: 30px;
+  @media (width <= 500px) {
+    margin-bottom: 10px;
+    text-align: center;
+    margin-block: 10px;
+  }
+}
+.contentText {
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--color-text);
+  @media (width <= 500px) {
+    font-weight: 300;
+    font-size: 12px;
+    line-height: 1.66667;
+    text-align: center;
+  }
+}

@@ -6,6 +6,16 @@ $tablet: 1023.98;
 $mobile: 767.98;
 $mobile-s: 480.98;
 
+$breakpoints: (
+  xs: 320px,
+  sm: 480px,
+  md: 768px,
+  lg: 1024px,
+  xl: 1280px,
+  xxl: 1440px,
+  uhd: 1920px
+);
+
 @mixin desktop-above {
   @media (width > rem($desktop)) {
     @content;

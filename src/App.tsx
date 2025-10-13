@@ -1,13 +1,31 @@
 import { ReactLenis, useLenis } from 'lenis/react';
 import { gsap } from 'gsap';
-
 import { useEffect } from 'react';
-
 import Header from './sections/Header/Header';
 import Hero from './sections/Hero/Hero';
+import Oil from './sections/Oil/Oil';
+import About from './sections/About/About';
+import Reviews from './sections/Reviews/Reviews';
+import Cart from './components/Cart/Cart';
+import { useAppSelector, useAppDispatch } from './Hooks/hooks';
+import { openCartToggle } from './redux/cartSlice';
+import Delivery from './sections/Delivery/Delivery';
+import Contacts from './sections/Contacts/Contacts';
+import Footer from './sections/Footer/Footer';
+import { MessageModal } from './components/MessageModal/MessageModal';
+import ThankModal from './components/ThankModal/ThankModal';
+
+import ModalPortal from './components/ModalPortal/ModalPortal';
 
 const App: React.FC = () => {
+  const isMessageOpen = useAppSelector((state) => state.message.isMessageOpen);
+  const isTnxMessageOpen = useAppSelector(
+    (state) => state.message.isTnxMessageOpen
+  );
+
+  const dispatch = useAppDispatch();
   const lenis = useLenis();
+  const isCartOpen = useAppSelector((state) => state.cart.isCartOpen);
 
   useEffect(() => {
     const update = (time: number): void => {
@@ -19,11 +37,58 @@ const App: React.FC = () => {
     return () => gsap.ticker.remove(update);
   }, [lenis]);
 
+  useEffect(() => {
+    const escapeListener = (e: KeyboardEvent): void => {
+      if (e.key !== 'Escape') return;
+
+      dispatch(openCartToggle());
+    };
+    if (isCartOpen && lenis) {
+      document.addEventListener('keydown', escapeListener);
+    }
+    return () => {
+      document.removeEventListener('keydown', escapeListener);
+    };
+  }, [isCartOpen]);
+
+  useEffect(() => {
+    isMessageOpen || isTnxMessageOpen ? lenis?.stop() : lenis?.start();
+  }, [isMessageOpen, isTnxMessageOpen]);
+
+  // useEffect(() => {
+
+
+  //   if (isCartOpen && lenis) {
+  //     lenis.stop();
+
+  //   } else {
+  //     lenis?.start();
+
+  //   }
+  // }, [isCartOpen]);
+
+
   return (
-    <ReactLenis root options={{ autoRaf: false }}>
-      <Header />
-      <Hero />
-    </ReactLenis>
+    <>
+      <ReactLenis root="#lenis-root" options={{ autoRaf: false }}>
+        <Header />
+        <Hero />
+        <Oil />
+        <About />
+        <Reviews />
+        <Delivery />
+        <Contacts />
+        <Footer />
+      </ReactLenis>
+
+      {isCartOpen && (
+        <ModalPortal>
+          <Cart />
+        </ModalPortal>
+      )}
+      {isMessageOpen && <MessageModal />}
+      {isTnxMessageOpen && <ThankModal />}
+    </>
   );
 };
 

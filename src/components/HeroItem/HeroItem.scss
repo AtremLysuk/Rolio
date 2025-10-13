@@ -10,12 +10,38 @@
     @include laptop {
       max-height: 504px;
       padding-top: 10px;
+      grid-template-columns: 500px 1fr;
+    }
+
+    @media (width <= 990px) {
       grid-template-columns: 450px 1fr;
     }
+    @media (width <= 930px) {
+      grid-template-columns: 400px 1fr;
+    }
+
+    @media (width <= 900px) {
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+    }
+
   }
 
   &__content {
-    padding-bottom: 220px;
+    padding-bottom: 100px;
+
+    @include laptop {
+      padding-bottom: 80px;
+    }
+
+    @media (width <= 900px) {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
   }
 }
 .slide-images {
@@ -24,9 +50,19 @@
   position: relative;
 
   @include laptop {
-
     min-width: auto;
     max-height: 500px;
+  }
+
+  @media (width <= 900px) {
+    max-height: 250px;
+    min-height: 400px;
+  }
+
+  @media (width <= 600px) {
+    max-width: 300px;
+    min-height: 320px;
+    margin-inline: auto;
   }
 
   &__bottle {
@@ -39,11 +75,26 @@
     transform: translate(-50%, -50%) rotate(2deg);
     z-index: 10;
 
+
+
+
     @include laptop {
       max-height: 456px;
       max-width: 177px;
       top: 50%;
-      transform: translate(-50%, -75%) rotate(2deg);
+      transform: translate(-50%, -60%) rotate(2deg);
+    }
+
+    @media (width <= 900px) {
+      max-height: 406px;
+      max-width: 150px;
+      transform: translate(-50%, -53%) rotate(2deg);
+    }
+
+    @media (width <= 600px) {
+      max-width: 117px;
+      max-height: 305px;
+      transform: translate(-50%, -59%) rotate(2deg);
     }
   }
   &__delicius {
@@ -58,8 +109,12 @@
       max-height: 230px;
       max-width: 230px;
       top: 50%;
-      transform: translate(-50%, -50%);
-
+      transform: translate(-65%, -10%);
+    }
+    @media (width <= 600px) {
+      max-width: 142px;
+      max-height: 120px;
+      transform: translate(-85%, 9%);
     }
   }
   &__bg {
@@ -72,7 +127,11 @@
     @include laptop {
       max-height: 393px;
       max-width: 393px;
-      transform: translate3d(-50%, -70%, 0);
+      transform: translate3d(-50%, -50%, 0);
+    }
+    @media (width <= 600px) {
+      max-width: 280px;
+      max-height: 280px;
     }
   }
 }
@@ -84,7 +143,16 @@
   align-items: start;
   gap: 30px;
 
+  @media(width <= 900px) {
+    margin-bottom: 20px;
+    gap: 10px;
+  }
+
   &-title {
+    @media (width <= 900px) {
+      margin-inline: auto;
+    }
+
     &--green {
       color: var(--color-green);
     }
@@ -104,6 +172,13 @@
   display: flex;
   align-items: center;
   justify-content: start;
+  flex-wrap: wrap;
+  row-gap: 15px;
+
+  @media (width <= 900px) {
+    justify-content: center;
+    margin-inline: auto;
+  }
 
   &__link {
     padding: 7px 16px;
@@ -162,17 +237,28 @@
   display: grid;
   row-gap: fluid(28, 24);
 
+  @media (width <= 1080px) {
+    row-gap: 20px;
+  }
+
+
   &__title {
+    @media (width <= 900px) {
+      text-align: center;
+    }
   }
 
   &__text {
     max-width: 613px;
+    @media (width <= 900px) {
+      text-align: center;
+    }
   }
 
   &__count {
-  }
-
-  &__buttons {
+    @media (width <= 900px) {
+      margin-inline: auto;
+    }
   }
 }
 
@@ -214,11 +300,32 @@
   justify-content: start;
   gap: 40px;
 
+  @media(width <= 900px) {
+    justify-content: center;
+  }
+
+  @media (width <= 600px) {
+    min-width: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: stretch;
+    gap: 20px;
+  }
+
   &-add {
     padding: 8px 48px;
+
+    @media (width <= 600px) {
+      justify-content: center;
+      min-width: 100%;
+    }
   }
 
   &-more {
     padding: 8px 48px;
+    @media (width <= 600px) {
+      justify-content: center;
+      min-width: 100%;
+    }
   }
 }

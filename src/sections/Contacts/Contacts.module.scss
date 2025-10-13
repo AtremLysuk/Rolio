@@ -1,0 +1,103 @@
+@use '../../scss/helpers/' as *;
+
+.contacts {
+  padding-block: var(--sectionPadding-y);
+
+  @media (width <= 990px) {
+    padding-top: var(--sectionPadding-y);
+    padding-bottom: 0;
+  }
+}
+
+.title {
+  margin-bottom: 40px;
+  text-align: center;
+}
+.inner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  @media (width <= 1366px) {
+    padding-bottom: 40px;
+  }
+
+  @media (width <= 990px) {
+    flex-direction: column;
+  }
+
+  @media (width <= 700px) {
+    row-gap: 16px;
+  }
+}
+.image {
+  position: relative;
+  margin-bottom: 40px;
+
+  @media (width <= 1366px) {
+    max-width: 610px;
+  }
+
+  @media (width <= 700px) {
+    align-self: end;
+  }
+
+  &::after {
+    position: absolute;
+    content: '';
+    left: -15%;
+    top: 5%;
+    width: 150px;
+    height: 100%;
+    background: rgba(106, 138, 0, 0.4);
+    z-index: -1;
+
+    @media (width <= 700px) {
+      width: 100%;
+      top: 12%;
+    }
+  }
+
+  img {
+    max-width: 100%;
+  }
+}
+.content {
+}
+.items {
+  padding: 56px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 32px;
+  background-color: #fff;
+  transform: translate(-10%, 0);
+
+  @media (width <= 1366px) {
+    padding: 40px;
+    transform: translate(-30%, 10%);
+  }
+
+  @media (width <= 990px) {
+    padding: 40px 40px 0 40px;
+    transform: translate(0, -20%);
+    row-gap: 24px;
+  }
+
+  @media (width <= 700px) {
+    transform: translate(0, 0);
+    padding: 10px;
+  }
+}
+.item {
+  display: flex;
+  align-items: center;
+  column-gap: 32px;
+
+  font-weight: 300;
+  line-height: 1.5;
+  cursor: pointer;
+}
+.itemIcon {
+}
+.messsageBtn {
+}

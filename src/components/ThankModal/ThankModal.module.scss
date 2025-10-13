@@ -1,0 +1,79 @@
+@use '@scss/helpers' as *;
+
+.wrapper {
+  position: fixed;
+  inset: 0;
+  width: 100dvw;
+  height: 100dvh;
+  backdrop-filter: blur(25px);
+  background: rgba(21, 24, 21, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 500;
+}
+.inner {
+  position: relative;
+  min-width: 600px;
+  padding: 56px 56px 100px 56px;
+  background-color: #fff;
+
+  @media (width <= 650px) {
+    padding: 56px 56px 100px 56px;
+    min-width: 80dvw;
+    max-width: 300px;
+  }
+
+  &::after {
+    position: absolute;
+    content: '';
+    width: 138px;
+    height: 100px;
+    right: 8%;
+    bottom: 5%;
+    background: url(/images/messageModal/tea.png) no-repeat;
+
+    @include mobile {
+      width: 126px;
+      height: 93px;
+    }
+  }
+}
+.header {
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.title {
+  font-weight: 400;
+  line-height: 1.11;
+  color: var(--color-green);
+}
+.closeBtn {
+  background-color: transparent;
+  border: none;
+
+  svg {
+    path {
+      fill: var(--color-green);
+    }
+  }
+
+  @include hover {
+    svg {
+      path {
+        fill: var(--color-accent);
+      }
+    }
+  }
+}
+.body {
+  p {
+    max-width: 330px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 1.57143;
+    color: var(--color-text);
+  }
+}

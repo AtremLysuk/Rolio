@@ -1,0 +1,170 @@
+@use '../../scss/helpers/' as *;
+
+@use '../../scss/helpers/' as *;
+
+.card {
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  height: 100%; 
+  background:var(--color-white);
+  border: 1px solid #eee;
+  border-radius: 12px;
+  box-shadow: 10px 10px 35px 0 rgba(190, 191, 183, 0.1);
+
+  &:nth-child(3), &:nth-child(4){
+    img{
+      max-width: 50px;
+    }
+  }
+
+
+  @media (width <= 990px) {
+    min-height: 605px;
+  }
+
+  @media (width <= 700px) {
+    min-height: 650px;
+  }
+}
+
+.image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 16px;
+
+  img {
+    max-width: 68px;
+    height: 230px;
+
+    @media (width <= 1000px) {
+      max-width: 51px;
+      max-height: 180px;
+    }
+  }
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.title {
+  font-weight: 700;
+  font-size: fluid(24, 22);
+  line-height: 1.25;
+  margin-bottom: 12px;
+
+  &--orange {
+    color: var(--color-orange);
+  }
+  &--green {
+    color: var(--color-green);
+  }
+  &--red {
+    color: var(--color-red);
+  }
+  &--emerald {
+    color: var(--color-emerald);
+  }
+}
+
+.text {
+  margin-bottom: 10px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.ingridients {
+  margin-bottom: fluid(29, 20);
+
+  @media (width <= 900px) {
+    text-align: center;
+  }
+}
+
+.footer {
+  margin-top: auto; // прижимаем к низу
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+
+  @media (width <= 1520px) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+
+}
+
+.count {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btnPlus,
+.btnMinus {
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(148, 148, 148, 0.5);
+  border-radius: 8px;
+  font-weight: 300;
+  font-size: 24px;
+  line-height: 1.33333;
+  text-align: center;
+  color: var(--color-text);
+  background: transparent;
+  cursor: pointer;
+}
+
+.value {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 2;
+  text-align: center;
+}
+
+.price {
+  font-size: 20px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+
+  &--orange {
+    color: var(--color-orange);
+  }
+  &--green {
+    color: var(--color-green);
+  }
+  &--red {
+    color: var(--color-red);
+  }
+  &--emerald {
+    color: var(--color-emerald);
+  }
+
+  span {
+    font-size: 14px;
+    font-weight: 300;
+    color: #4a4a4a;
+  }
+}
+
+.btnAdd,
+.btnOrder {
+  display: inline-block;
+  max-width: 146px;
+  padding: 3px 16px;
+  text-transform: uppercase;
+  text-align: center;
+
+  @media (width <= 1520px) {
+    min-width: 100%;
+  }
+}

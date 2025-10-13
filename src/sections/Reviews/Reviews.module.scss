@@ -1,0 +1,21 @@
+@use '../../scss/helpers/' as *;
+
+.reviews {
+  padding-block: var(--sectionPadding-y);
+}
+
+.title {
+  margin-bottom: fluid(40, 24);
+  text-align: center;
+}
+
+.slide {
+
+  // box-shadow: 10px 10px 35px 0 rgba(190, 191, 183, 0.1);
+  img {
+    max-width: 100%;
+    min-width: 100%;
+  }
+}
+
+
