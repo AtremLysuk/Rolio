@@ -38,6 +38,28 @@ const App: React.FC = () => {
   }, [lenis]);
 
   useEffect(() => {
+    if (!lenis) return;
+
+    const update = (time: number) => lenis.raf(time * 1000);
+    gsap.ticker.add(update);
+
+    const handleVisibility = () => {
+      if (document.hidden) {
+        gsap.ticker.remove(update);
+      } else {
+        gsap.ticker.add(update);
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibility);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibility);
+      gsap.ticker.remove(update);
+    };
+  }, [lenis]);
+
+  useEffect(() => {
     const escapeListener = (e: KeyboardEvent): void => {
       if (e.key !== 'Escape') return;
 
@@ -57,7 +79,6 @@ const App: React.FC = () => {
 
   // useEffect(() => {
 
-
   //   if (isCartOpen && lenis) {
   //     lenis.stop();
 
@@ -66,7 +87,6 @@ const App: React.FC = () => {
 
   //   }
   // }, [isCartOpen]);
-
 
   return (
     <>

@@ -56,8 +56,6 @@
   flex-direction: column;
   }
 }
-.itemImage {
-}
 .itemBody {
   display: flex;
   flex-direction: column;
@@ -147,6 +145,8 @@
     }
   }
   label {
+    display: grid;
+    row-gap: 5px;
     font-weight: 400;
     font-size: 14px;
     line-height: 1.57143;
@@ -180,6 +180,7 @@
   }
 
   label {
+    display: grid;
     font-weight: 700;
     font-size: 16px;
     cursor: pointer;

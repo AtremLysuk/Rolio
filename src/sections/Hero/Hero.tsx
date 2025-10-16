@@ -29,7 +29,7 @@ export type TSlideData = {
 const Hero: React.FC = () => {
   const swiperRef = useRef<any | null>(null);
 
-  const [activeSlide, setActiveSlide] = useState<number>(1);
+  const [activeSlide, setActiveSlide] = useState<number>(0);
 
   const slidesData: TSlideData[] = [
     {
@@ -150,7 +150,6 @@ const Hero: React.FC = () => {
     },
   ];
 
-
   return (
     <section className="hero">
       <div className="hero__container container">
@@ -161,12 +160,14 @@ const Hero: React.FC = () => {
               slidesPerGroup={1}
               modules={[Pagination]}
               onSwiper={(swiper) => (swiperRef.current = swiper)}
-              onSlideChange={() => console.log(activeSlide)}
+              onSlideChange={(swiper) => setActiveSlide(swiper.activeIndex)}
             >
-              {slidesData.map((slide) => (
+              {slidesData.map((slide, index) => (
                 <SwiperSlide key={slide.title}>
                   <HeroItem
                     {...slide}
+                    index={index}
+                    isActive={activeSlide === index}
                     slideHandler={(index: number) => {
                       setActiveSlide(index);
                       swiperRef.current?.slideTo(index);

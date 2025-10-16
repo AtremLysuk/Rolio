@@ -11,6 +11,8 @@ import {
 import { FC, useEffect, useRef, useState } from 'react';
 import { FocusTrap } from 'focus-trap-react';
 import { useLenis } from 'lenis/react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 
 type Tfields = {
   name: string;
@@ -28,6 +30,7 @@ type Tfields = {
 const Cart: FC = () => {
   const [deliveryType, setDeliveryType] = useState<'new' | 'ukr'>('new');
   const overlrayRef = useRef<HTMLDivElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const closeBtnRef = useRef<HTMLButtonElement | null>(null);
   const dispatch = useAppDispatch();
   const { isCartOpen, cartItems } = useAppSelector((state) => state.cart);
@@ -43,6 +46,44 @@ const Cart: FC = () => {
 
   const onSubmit = (data) => {
     console.log(data);
+  };
+
+  useGSAP(
+    () => {
+      const tl = gsap.timeline();
+      tl.fromTo(
+        overlrayRef.current,
+        { opacity: 0 },
+        { opacity: 1, duration: 0.4 }
+      );
+
+      tl.fromTo(
+        containerRef.current,
+        { opacity: 0, scale: 0.1 },
+        { opacity: 1, scale: 1, duration: 0.4, ease: 'power3.out' },
+        0
+      );
+    },
+    { scope: containerRef, dependencies: [] }
+  );
+
+  const closeModal = () => {
+    if (!overlrayRef.current || !containerRef.current) {
+      dispatch(openCartToggle());
+    }
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        dispatch(openCartToggle());
+      },
+    });
+
+    tl.to(
+      containerRef.current,
+      { opacity: 0, duration: 0.3, ease: 'power2.in' },
+      0
+    );
+    tl.to(overlrayRef.current, { opacity: 0, duration: 0.2 }, 0);
   };
 
   useEffect(() => {
@@ -63,16 +104,18 @@ const Cart: FC = () => {
       ref={overlrayRef}
       aria-modal={true}
       onClick={(e: React.MouseEvent<HTMLDivElement>) => {
-        if (
-          e.target !== overlrayRef.current &&
-          e.target !== closeBtnRef.current
-        )
-          return;
-        dispatch(openCartToggle());
+        // if (e.target !== overlrayRef.current) return;
+        console.log(e.target)
+        closeModal();
       }}
     >
       <FocusTrap>
-        <div className={styles.body} aria-labelledby="cart-title" role="dialog">
+        <div
+          className={styles.body}
+          ref={containerRef}
+          aria-labelledby="cart-title"
+          role="dialog"
+        >
           <header className={styles.cartHeader}>
             <h3 className={styles.sectionTitle} id="cart-title">
               КОРЗИНА
@@ -83,7 +126,7 @@ const Cart: FC = () => {
               ref={closeBtnRef}
               aria-label="close cart"
               onClick={() => {
-                dispatch(openCartToggle());
+                closeModal();
               }}
             >
               <MyIcon
@@ -120,6 +163,7 @@ const Cart: FC = () => {
                     <div className={styles.itemBodyButtons}>
                       <button
                         className={styles.btnMinus}
+                        aria-label={`уменьшить количество ${item.title}`}
                         onClick={() => {
                           dispatch(minusItem(item.id));
                         }}
@@ -129,6 +173,7 @@ const Cart: FC = () => {
                       <span className={styles.itemCount}>{item.count}</span>
                       <button
                         className={styles.btnPlus}
+                        aria-label={`увеличить количество ${item.title}`}
                         onClick={() => {
                           dispatch(plusItem(item.id));
                         }}
@@ -141,7 +186,7 @@ const Cart: FC = () => {
                     <p>{item.price * item.count}грн</p>
                     <button
                       className={styles.itemRemove}
-                      aria-label="remove item from cart"
+                      aria-label={`удалить ${item.title} из корзины`}
                       onClick={() => {
                         dispatch(removeItem(item.id));
                       }}
@@ -242,45 +287,50 @@ const Cart: FC = () => {
                 <fieldset className={styles.newWrapper} aria-live="polite">
                   <legend>Новая почта</legend>
                   <div className={styles.newPochta}>
-                    <input
-                      className={styles.newPochtaCityInput}
-                      {...register('newCity', {
-                        required: 'Это поле обязательно',
-                      })}
-                      type="text"
-                      id="city"
-                      aria-describedby="newcity-error"
-                      aria-invalid={!!errors.newCity}
-                      placeholder="Город"
-                    />
-                    {errors?.newCity && (
-                      <span
-                        id="newcity-error"
-                        role="alert"
-                        className={styles.error}
-                      >
-                        {errors.newCity.message}
-                      </span>
-                    )}
-                    <input
-                      className={styles.newPochtaOfficeInput}
-                      {...register('newOffice', {
-                        required: 'Это поле обязательно',
-                      })}
-                      type="text"
-                      aria-invalid={!!errors.newOffice}
-                      aria-describedby="newOffice-error"
-                      placeholder="Отделение №"
-                    />
-                    {errors?.newOffice && (
-                      <span
-                        id="newOffice-error"
-                        role="alert"
-                        className={styles.error}
-                      >
-                        {errors.newOffice.message}
-                      </span>
-                    )}
+                    <label htmlFor="newCity">
+                      <input
+                        className={styles.newPochtaCityInput}
+                        {...register('newCity', {
+                          required: 'Это поле обязательно',
+                        })}
+                        type="text"
+                        id="newCity"
+                        aria-describedby="newcity-error"
+                        aria-invalid={!!errors.newCity}
+                        placeholder="Город"
+                      />
+                      {errors?.newCity && (
+                        <span
+                          id="newcity-error"
+                          role="alert"
+                          className={styles.error}
+                        >
+                          {errors.newCity.message}
+                        </span>
+                      )}
+                    </label>
+                    <label htmlFor="newOffice">
+                      <input
+                        className={styles.newPochtaOfficeInput}
+                        {...register('newOffice', {
+                          required: 'Это поле обязательно',
+                        })}
+                        type="text"
+                        aria-invalid={!!errors.newOffice}
+                        aria-describedby="newOffice-error"
+                        placeholder="Отделение №"
+                        id="newOffice"
+                      />
+                      {errors?.newOffice && (
+                        <span
+                          id="newOffice-error"
+                          role="alert"
+                          className={styles.error}
+                        >
+                          {errors.newOffice.message}
+                        </span>
+                      )}
+                    </label>
                   </div>
                 </fieldset>
               )}
@@ -288,56 +338,88 @@ const Cart: FC = () => {
                 <fieldset className={styles.ukrWrapper} aria-live="polite">
                   <legend>Укрпочта</legend>
                   <div className={styles.ukrPochta}>
-                    <input
-                      className={styles.ukrIndexInput}
-                      {...register('ukrIndex', {
-                        required: 'Это поле обязательно',
-                        pattern: {
-                          value: /^\d{5}$/,
-                          message: 'некорректный формат',
-                        },
-                      })}
-                      type="text"
-                      aria-invalid={!!errors.ukrIndex}
-                      placeholder="49000"
-                    />
-                    {errors?.ukrIndex && (
-                      <span
-                        id="ukrIndex-error"
-                        role="alert"
-                        className={styles.error}
-                      >
-                        {errors.ukrIndex.message}
-                      </span>
-                    )}
-                    <input
-                      className={styles.ukrCityInput}
-                      {...register('ukrCity', {
-                        required: 'Это поле обязательно',
-                      })}
-                      aria-invalid={!!errors.ukrCity}
-                      aria-describedby="ukrCity-error"
-                      placeholder="Город"
-                      type="text"
-                    />
-                    {errors?.ukrCity && (
-                      <span
-                        id="ukrCity-error"
-                        role="alert"
-                        className={styles.error}
-                      >
-                        {errors.ukrCity.message}
-                      </span>
-                    )}
-                    <input
-                      className={styles.ukrStreetInput}
-                      {...register('ukrStreet', { required: '' })}
-                      type="text"
-                      aria-invalid={!!errors.ukrStreet}
-                      aria-describedby="ukrStreet-error"
-                      placeholder="Улица"
-                    />
-                    {errors?.ukrCity && (
+                    <label htmlFor="ukrIndex">
+                      <input
+                        className={styles.ukrIndexInput}
+                        {...register('ukrIndex', {
+                          required: 'Это поле обязательно',
+                          pattern: {
+                            value: /^\d{5}$/,
+                            message: 'некорректный формат',
+                          },
+                        })}
+                        type="text"
+                        aria-invalid={!!errors.ukrIndex}
+                        placeholder="49000"
+                        id="ukrIndex"
+                      />
+                      {errors?.ukrIndex && (
+                        <span
+                          id="ukrIndex-error"
+                          role="alert"
+                          className={styles.error}
+                        >
+                          {errors.ukrIndex.message}
+                        </span>
+                      )}
+                    </label>
+
+                    <label htmlFor="ukrCity">
+                      <input
+                        className={styles.ukrCityInput}
+                        {...register('ukrCity', {
+                          required: 'Это поле обязательно',
+                        })}
+                        aria-invalid={!!errors.ukrCity}
+                        aria-describedby="ukrCity-error"
+                        placeholder="Город"
+                        type="text"
+                        id="ukrCity"
+                      />
+                      {errors?.ukrCity && (
+                        <span
+                          id="ukrCity-error"
+                          role="alert"
+                          className={styles.error}
+                        >
+                          {errors.ukrCity.message}
+                        </span>
+                      )}
+                    </label>
+
+                    <label htmlFor="ukrStreet">
+                      <input
+                        className={styles.ukrStreetInput}
+                        {...register('ukrStreet', {
+                          required: 'Введите название улицы',
+                        })}
+                        type="text"
+                        aria-invalid={!!errors.ukrStreet}
+                        aria-describedby="ukrStreet-error"
+                        placeholder="Улица"
+                        id="ukrStreet"
+                      />
+                      {errors?.ukrStreet && (
+                        <span
+                          id="ukrStreet-error"
+                          role="alert"
+                          className={styles.error}
+                        >
+                          {errors.ukrStreet?.message}
+                        </span>
+                      )}
+                    </label>
+                    <label htmlFor="ukrHouse">
+                      <input
+                        className={styles.ukrHouseInput}
+                        {...register('ukrHouse', {
+                          required: 'Введите номер дома',
+                        })}
+                        type="text"
+                        placeholder="Дом"
+                        id="ukrHouse"
+                        aria-invalid={!!errors.ukrStreet}
+                      />
                       <span
                         id="ukrStreet-error"
                         role="alert"
@@ -345,45 +427,39 @@ const Cart: FC = () => {
                       >
                         {errors.ukrStreet?.message}
                       </span>
-                    )}
-                    <input
-                      className={styles.ukrHouseInput}
-                      {...register('ukrHouse', { required: '' })}
-                      type="text"
-                      placeholder="Дом"
-                      
-                    />
-                    <input
-                      className={styles.ukrApartment}
-                      {...register('ukrApartment')}
-                      type="text"
-                      aria-invalid={!!errors.ukrApartment}
-                      aria-describedby="ukrApartment-error"
-                      placeholder="квартира"
-                    />
-                    {errors?.ukrApartment && (
-                      <span
-                        id="ukrApartment-error"
-                        role="alert"
-                        className={styles.error}
-                      >
-                        {errors.ukrApartment?.message}
-                      </span>
-                    )}
+                    </label>
+
+                    <label htmlFor="ukrApartment">
+                      <input
+                        className={styles.ukrApartment}
+                        {...register('ukrApartment')}
+                        type="text"
+                        aria-invalid={!!errors.ukrApartment}
+                        aria-describedby="ukrApartment-error"
+                        placeholder="квартира"
+                        id="ukrApartment"
+                      />
+                      {errors?.ukrApartment && (
+                        <span
+                          id="ukrApartment-error"
+                          role="alert"
+                          className={styles.error}
+                        >
+                          {errors.ukrApartment?.message}
+                        </span>
+                      )}
+                    </label>
                   </div>
                 </fieldset>
               )}
               <div className={styles.formFooter}>
-                <label
-                  className={styles.messageLabel}
-                  aria-label="Ваш комментарий к заказу"
-                >
+                <label className={styles.messageLabel}>
                   <textarea
                     className={styles.formMessage}
                     {...register('message')}
                     placeholder="Ваш комментарий к заказу"
                     rows={4}
-                    
+                    aria-label="Ваш комментарий к заказу"
                   />
                 </label>
                 <div className={styles.formButtons}>

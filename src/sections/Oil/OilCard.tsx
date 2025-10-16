@@ -1,9 +1,11 @@
-import { FC, useState } from 'react';
+import { FC, useState, useRef } from 'react';
 import classNames from 'classnames';
 import Button from '../../components/Button/Button';
 import styles from './OilCard.module.scss';
 import { addItem, minusItem, plusItem } from '../../redux/cartSlice';
 import { useAppDispatch, useAppSelector } from '../../Hooks/hooks';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 
 import { IProducts } from './Oil';
 
@@ -25,6 +27,26 @@ const OilCard: FC<OilCardProps> = ({
   const [productCount, setProductCount] = useState<number>(0);
   const dispatch = useAppDispatch();
   const cartItems = useAppSelector((state) => state.cart.cartItems);
+  const itemCountRef = useRef<HTMLSpanElement | null>(null);
+
+  useGSAP(
+    () => {
+      if (!itemCountRef.current) return;
+
+      gsap.fromTo(
+        itemCountRef.current,
+        { scale: 1.4, opacity: 0, y: -10 },
+        {
+          scale: 1,
+          opacity: 1,
+          y: 0,
+          duration: 0.3,
+          ease: 'back.out(2)',
+        }
+      );
+    },
+    { dependencies: [productCount] }
+  );
 
   return (
     <li className={styles.card} key={id}>
@@ -51,7 +73,7 @@ const OilCard: FC<OilCardProps> = ({
           <div className={styles.count}>
             <button
               className={styles.btnMinus}
-              aria-label="decrease product count"
+              aria-label={`decrease product ${title}count`}
               onClick={() => {
                 if (productCount === 0) return;
                 setProductCount((prev) => prev - 1);
@@ -61,10 +83,12 @@ const OilCard: FC<OilCardProps> = ({
             >
               -
             </button>
-            <p className={styles.value}>{productCount}</p>
+            <span className={styles.value} ref={itemCountRef}>
+              {productCount}
+            </span>
             <button
               className={styles.btnPlus}
-              aria-label="increase product count"
+              aria-label={`increase product ${title}count`}
               onClick={() => {
                 setProductCount((prev) => prev + 1);
                 dispatch(plusItem(id));
@@ -80,7 +104,7 @@ const OilCard: FC<OilCardProps> = ({
           </p>
           <Button
             title="В корзину"
-            aria-label="add item to cart"
+            aria-label={`add item ${title} to cart`}
             className={styles.btnAdd}
             color={color}
             onClick={() => {
@@ -93,7 +117,7 @@ const OilCard: FC<OilCardProps> = ({
                   count: productCount,
                 })
               );
-              setProductCount(0)
+              setProductCount(0);
             }}
           />
           <Button
