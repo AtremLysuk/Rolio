@@ -7,8 +7,6 @@ const ModalPortal: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   useEffect(() => {
     const el = document.getElementById('modal-root');
     setContainer(el);
-
-    console.log("modal-root", el)
   }, []);
 
   if (!container) return null;

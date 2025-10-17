@@ -138,6 +138,10 @@
     background: var(--green-gradient);
   }
 }
+.field{
+  display: flex;
+  flex-direction: column;
+}
 
 .error {
   font-size: 14px;

@@ -37,27 +37,6 @@ const App: React.FC = () => {
     return () => gsap.ticker.remove(update);
   }, [lenis]);
 
-  useEffect(() => {
-    if (!lenis) return;
-
-    const update = (time: number) => lenis.raf(time * 1000);
-    gsap.ticker.add(update);
-
-    const handleVisibility = () => {
-      if (document.hidden) {
-        gsap.ticker.remove(update);
-      } else {
-        gsap.ticker.add(update);
-      }
-    };
-
-    document.addEventListener('visibilitychange', handleVisibility);
-
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibility);
-      gsap.ticker.remove(update);
-    };
-  }, [lenis]);
 
   useEffect(() => {
     const escapeListener = (e: KeyboardEvent): void => {
@@ -74,8 +53,8 @@ const App: React.FC = () => {
   }, [isCartOpen]);
 
   useEffect(() => {
-    isMessageOpen || isTnxMessageOpen ? lenis?.stop() : lenis?.start();
-  }, [isMessageOpen, isTnxMessageOpen]);
+    isMessageOpen || isTnxMessageOpen || isCartOpen ? lenis?.stop() : lenis?.start();
+  }, [isMessageOpen, isTnxMessageOpen, isCartOpen]);
 
   // useEffect(() => {
 
@@ -90,16 +69,14 @@ const App: React.FC = () => {
 
   return (
     <>
-      <ReactLenis root="#lenis-root" options={{ autoRaf: false }}>
-        <Header />
-        <Hero />
-        <Oil />
-        <About />
-        <Reviews />
-        <Delivery />
-        <Contacts />
-        <Footer />
-      </ReactLenis>
+      <Header />
+      <Hero />
+      <Oil />
+      <About />
+      <Reviews />
+      <Delivery />
+      <Contacts />
+      <Footer />
 
       {isCartOpen && (
         <ModalPortal>

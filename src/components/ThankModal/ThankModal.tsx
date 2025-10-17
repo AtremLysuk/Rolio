@@ -3,15 +3,50 @@ import styles from './ThankModal.module.scss';
 import { FC, useEffect, useRef } from 'react';
 import { useAppDispatch, useAppSelector } from '@/Hooks/hooks';
 import { tnxModalClose } from '@/redux/messageSlice';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 
 const ThankModal: FC = () => {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
   const closeBtnRef = useRef<HTMLButtonElement | null>(null);
   const dispatch = useAppDispatch();
   const isTnxMessageOpen = useAppSelector(
     (state) => state.message.isTnxMessageOpen
   );
   const user = useAppSelector((state) => state.message.user);
+
+  useGSAP(
+    () => {
+      if (!isTnxMessageOpen) return;
+
+      gsap.fromTo(
+        wrapperRef.current,
+        { opacity: 0 },
+        { opacity: 1, duration: 0.5 }
+      );
+
+      gsap.fromTo(
+        containerRef.current,
+        { opacity: 0, y: -50 },
+        { opacity: 1, y: 0, duration: 0.4, ease: 'power3.out' }
+      );
+    },
+    { dependencies: [isTnxMessageOpen] }
+  );
+
+  const closeThankModal = () => {
+    if(!isTnxMessageOpen) return
+    const tl = gsap.timeline({
+      onComplete: () => {
+        dispatch(tnxModalClose());
+      },
+    });
+
+    tl.to(containerRef.current, { opacity: 0, y: -50, duration: 0.5 });
+    tl.to(wrapperRef.current, { opacity: 0, duration: 0.2 }, '-=0.3');
+  };
 
   useEffect(() => {
     const listener = (e: KeyboardEvent) => {
@@ -35,12 +70,12 @@ const ThankModal: FC = () => {
       aria-modal="true"
       aria-labelledby="thank-title"
       onClick={(e: React.MouseEvent<HTMLDivElement>) => {
-        if (e.target === wrapperRef.current) {
-          dispatch(tnxModalClose());
+        if (e.target === e.currentTarget) {
+          closeThankModal()
         }
       }}
     >
-      <div className={styles.inner}>
+      <div className={styles.inner} ref={containerRef}>
         <header className={styles.header}>
           <h3 className={styles.title} id="thank-title">
             Спасибо
@@ -50,7 +85,7 @@ const ThankModal: FC = () => {
             ref={closeBtnRef}
             aria-label="modal close button"
             onClick={() => {
-              dispatch(tnxModalClose());
+              closeThankModal()
             }}
           >
             <svg

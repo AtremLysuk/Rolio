@@ -1,20 +1,23 @@
 import ReactLenis from 'lenis/react';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 
 export const LenisProvider = ({ children }: React.PropsWithChildren) => {
-  const customRootRef = useRef<HTMLDivElement | null>(null);
-  const [isMounted, setIsMounted] = useState<boolean>(false);
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const lenisRootEl = document.getElementById('lenis-root');
-    if (lenisRootEl instanceof HTMLDivElement) {
-      customRootRef.current = lenisRootEl;
-
-      setIsMounted(true);
+    const el = document.getElementById('lenis-root');
+    if (el instanceof HTMLDivElement) {
+      rootRef.current = el;
+      setMounted(true);
     }
   }, []);
 
-  if (!isMounted) return null;
+  if (!mounted) return null;
 
-  return <ReactLenis root={customRootRef}>{children}</ReactLenis>;
+  return (
+    <ReactLenis root={rootRef} options={{ autoRaf: false }}>
+      {children}
+    </ReactLenis>
+  );
 };

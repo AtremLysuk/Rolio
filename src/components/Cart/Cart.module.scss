@@ -9,6 +9,7 @@
   backdrop-filter: blur(25px);
   background: rgba(21, 24, 21, 0.6);
   z-index: 500;
+  pointer-events: auto;
 }
 
 .body {
