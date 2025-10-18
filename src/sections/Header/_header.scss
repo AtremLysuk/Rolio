@@ -1,7 +1,6 @@
 @use '../../scss/helpers/' as *;
 
 .header {
-
   &__inner {
     margin-top: 55px;
     display: flex;
@@ -59,6 +58,8 @@
       background: var(--color-green);
       z-index: -1;
 
+
+
       @media (width <= 1366px) {
         width: 180px;
         height: 180px;
@@ -96,6 +97,8 @@
         fill: #fff;
       }
     }
+
+
   }
 
   &__menu {
@@ -137,7 +140,7 @@
       color: var(--color-green);
     }
 
-    &-active{
+    &-active {
       display: block;
       position: fixed;
       width: 100%;
@@ -159,7 +162,6 @@
     border: none;
     cursor: pointer;
     z-index: 400;
-
 
     @media (width <= 920px) {
       display: block;
@@ -204,7 +206,6 @@
     &.active {
       .header__burger-button--line {
         background: transparent;
-        
 
         &::before {
           transform: rotate(-45deg) translate(6px, -5px);
@@ -235,7 +236,17 @@
       margin-right: 10px;
     }
 
+    @include hover {
+      svg{
+        transform: scale(1.1);
+        path{
+          fill: var(--color-accent);
+        }
+      }
+    }
+
     svg {
+      transition: fill 0.3s ease,  transform 0.3s ease;
       path {
         fill: var(--color-green);
       }
@@ -261,9 +272,9 @@
       font-size: 16px;
       text-align: center;
       color: #fff;
-      
-      @media(width <= 600px) {
-       font-size: 14px;
+
+      @media (width <= 600px) {
+        font-size: 14px;
       }
     }
   }

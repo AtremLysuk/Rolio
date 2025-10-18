@@ -308,6 +308,9 @@
 
   &__plus,
   &__minus {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border: 1px solid rgba(148, 148, 148, 0.5);
     border-radius: 8px;
     width: 40px;
@@ -317,9 +320,12 @@
     text-align: center;
     color: var(--color-text);
     aspect-ratio: 1;
-
     background-color: transparent;
     cursor: pointer;
+
+    @include  hover {
+      border-color: var(--color-accent) ;
+    }
   }
   &__minus {
   }

@@ -40,7 +40,18 @@
 .closeBtn {
   background-color: transparent;
   border: none;
+  
   cursor: pointer;
+
+  @include hover {
+
+    svg{
+      transition: fill .3s ease;
+      path {
+        fill: #e74c3c;
+      }
+    }
+  }
 
   &:focus-visible {
     outline: 2px solid var(--color-focus);

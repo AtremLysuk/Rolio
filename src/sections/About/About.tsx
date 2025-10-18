@@ -1,8 +1,12 @@
 import classNames from 'classnames';
 import styles from './About.module.scss';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
+import ScrollTrigger from 'gsap/ScrollTrigger';
+import SplitText from 'gsap/SplitText';
+import { FC, useRef } from 'react';
 
-import { FC } from 'react';
-
+gsap.registerPlugin(ScrollTrigger, SplitText);
 interface IAboutItems {
   subtitle: string;
   text: string;
@@ -10,6 +14,9 @@ interface IAboutItems {
 }
 
 const About: FC = () => {
+  const textRef = useRef<HTMLDivElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
   const aboutItems: IAboutItems[] = [
     {
       subtitle: 'Кто мы',
@@ -23,8 +30,55 @@ const About: FC = () => {
     },
   ];
 
+  useGSAP(() => {
+    const splits: SplitText[] = [];
+    let isActive = true;
+    document.fonts.ready.then(() => {
+      if (!isActive) return;
+      const textArray = gsap.utils.toArray<HTMLElement>('[data-text]');
+
+      textArray.forEach((el) => {
+        const split = new SplitText(el, { type: 'lines' });
+        splits.push(split);
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 80%',
+          },
+        });
+
+        tl.fromTo(
+          split.lines,
+          {
+            opacity: 0,
+            y: 20,
+          },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            stagger: 0.1,
+            ease: 'power3.out',
+          }
+        );
+      });
+    });
+    return () => {
+      isActive = false;
+      splits.forEach((el) => {
+        el.revert();
+      });
+    };
+  }, []);
+
   return (
-    <section className={styles.about} id="about" aria-labelledby="about-title">
+    <section
+      className={styles.about}
+      id="about"
+      aria-labelledby="about-title"
+      ref={containerRef}
+    >
       <div className="about__container container">
         <h2 className={styles.title} id="about-title">
           О нас
@@ -56,7 +110,9 @@ const About: FC = () => {
                 )}
               >
                 <h4 className={styles.contentTitle}>{item.subtitle}</h4>
-                <div className={styles.contentText}>{item.text}</div>
+                <div className={styles.contentText} data-text>
+                  {item.text}
+                </div>
               </div>
             </div>
           ))}
