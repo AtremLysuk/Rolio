@@ -90,13 +90,51 @@ const Cart: FC = () => {
   }, [isCartOpen]);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!containerRef.current || !isCartOpen) return;
     const focusableItems = Array.from(
       containerRef.current?.querySelectorAll<HTMLElement>(
         '[data-tab], button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
       )
     );
+
+    if (focusableItems.length === 0) return;
+
+    requestAnimationFrame(() => {
+      closeBtnRef.current?.focus();
+    });
+    const first = focusableItems[0];
+    const last = focusableItems[focusableItems.length - 1];
+
+    const handleTab = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab') return;
+
+      const active = document.activeElement as HTMLElement;
+      if (active === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    containerRef.current.addEventListener('keydown', handleTab);
+
+    return () => {
+      containerRef.current?.removeEventListener('keydown', handleTab);
+    };
   }, []);
+
+  useEffect(() => {
+    const escapeListener = (e: KeyboardEvent): void => {
+      if (e.key !== 'Escape') return;
+
+      closeCartModal();
+    };
+    if (isCartOpen && lenis) {
+      document.addEventListener('keydown', escapeListener);
+    }
+    return () => {
+      document.removeEventListener('keydown', escapeListener);
+    };
+  }, [isCartOpen]);
 
   return (
     <div
@@ -213,7 +251,6 @@ const Cart: FC = () => {
                 type="text"
                 placeholder="Фамилия Имя Отчество"
                 id="name"
-                required
                 aria-invalid={!!errors.name}
                 aria-describedby="name-error"
               />
@@ -246,40 +283,45 @@ const Cart: FC = () => {
               )}
             </label>
           </div>
-
           <div className={styles.deliverySelect}>
-            <label
-              className={styles.deliverySelectNewLabel}
-              htmlFor="newSelect"
-            >
-              <input
-                className={styles.deliverySelectNewInput}
-                type="radio"
-                name="delivery"
-                id="newSelect"
-                value="new"
-                aria-checked={deliveryType === 'new'}
-                checked={deliveryType === 'new'}
-                onChange={() => setDeliveryType('new')}
-              />
-              Новая почта
-            </label>
-            <label
-              className={styles.deliverySelectUkrLabel}
-              htmlFor="ukrSelect"
-            >
-              <input
-                className={styles.deliverySelectUkrInput}
-                type="radio"
-                name="delivery"
-                id="ukrSelect"
-                value="ukr"
-                aria-checked={deliveryType === 'ukr'}
-                checked={deliveryType === 'ukr'}
-                onChange={() => setDeliveryType('ukr')}
-              />
-              Укрпочта
-            </label>
+            <div className={styles.field}>
+              <label
+                className={styles.deliverySelectNewLabel}
+                htmlFor="newSelect"
+              >
+                <input
+                  className={styles.deliverySelectNewInput}
+                  type="radio"
+                  name="delivery"
+                  id="newSelect"
+                  value="new"
+                  aria-checked={deliveryType === 'new'}
+                  checked={deliveryType === 'new'}
+                  onChange={() => setDeliveryType('new')}
+                />
+                <span className={styles.radioFake}></span>
+                Новая почта
+              </label>
+            </div>
+            <div className={styles.field}>
+              <label
+                className={styles.deliverySelectUkrLabel}
+                htmlFor="ukrSelect"
+              >
+                <input
+                  className={styles.deliverySelectUkrInput}
+                  type="radio"
+                  name="delivery"
+                  id="ukrSelect"
+                  value="ukr"
+                  aria-checked={deliveryType === 'ukr'}
+                  checked={deliveryType === 'ukr'}
+                  onChange={() => setDeliveryType('ukr')}
+                />
+                <span className={styles.radioFake}></span>
+                Укрпочта
+              </label>
+            </div>
           </div>
 
           <div className={styles.deliveryWrapper}>
@@ -287,50 +329,54 @@ const Cart: FC = () => {
               <fieldset className={styles.newWrapper} aria-live="polite">
                 <legend>Новая почта</legend>
                 <div className={styles.newPochta}>
-                  <label htmlFor="newCity">
-                    <input
-                      className={styles.newPochtaCityInput}
-                      {...register('newCity', {
-                        required: 'Это поле обязательно',
-                      })}
-                      type="text"
-                      id="newCity"
-                      aria-describedby="newcity-error"
-                      aria-invalid={!!errors.newCity}
-                      placeholder="Город"
-                    />
-                    {errors?.newCity && (
-                      <span
-                        id="newcity-error"
-                        role="alert"
-                        className={styles.error}
-                      >
-                        {errors.newCity.message}
-                      </span>
-                    )}
-                  </label>
-                  <label htmlFor="newOffice">
-                    <input
-                      className={styles.newPochtaOfficeInput}
-                      {...register('newOffice', {
-                        required: 'Это поле обязательно',
-                      })}
-                      type="text"
-                      aria-invalid={!!errors.newOffice}
-                      aria-describedby="newOffice-error"
-                      placeholder="Отделение №"
-                      id="newOffice"
-                    />
-                    {errors?.newOffice && (
-                      <span
-                        id="newOffice-error"
-                        role="alert"
-                        className={styles.error}
-                      >
-                        {errors.newOffice.message}
-                      </span>
-                    )}
-                  </label>
+                  <div className={styles.field}>
+                    <label htmlFor="newCity">
+                      <input
+                        className={styles.newPochtaCityInput}
+                        {...register('newCity', {
+                          required: 'Это поле обязательно',
+                        })}
+                        type="text"
+                        id="newCity"
+                        aria-describedby="newcity-error"
+                        aria-invalid={!!errors.newCity}
+                        placeholder="Город"
+                      />
+                      {errors?.newCity && (
+                        <span
+                          id="newcity-error"
+                          role="alert"
+                          className={styles.error}
+                        >
+                          {errors.newCity.message}
+                        </span>
+                      )}
+                    </label>
+                  </div>
+                  <div className={styles.field}>
+                    <label htmlFor="newOffice">
+                      <input
+                        className={styles.newPochtaOfficeInput}
+                        {...register('newOffice', {
+                          required: 'Это поле обязательно',
+                        })}
+                        type="text"
+                        aria-invalid={!!errors.newOffice}
+                        aria-describedby="newOffice-error"
+                        placeholder="Отделение №"
+                        id="newOffice"
+                      />
+                      {errors?.newOffice && (
+                        <span
+                          id="newOffice-error"
+                          role="alert"
+                          className={styles.error}
+                        >
+                          {errors.newOffice.message}
+                        </span>
+                      )}
+                    </label>
+                  </div>
                 </div>
               </fieldset>
             )}
@@ -338,68 +384,96 @@ const Cart: FC = () => {
               <fieldset className={styles.ukrWrapper} aria-live="polite">
                 <legend>Укрпочта</legend>
                 <div className={styles.ukrPochta}>
-                  <label htmlFor="ukrIndex">
-                    <input
-                      className={styles.ukrIndexInput}
-                      {...register('ukrIndex', {
-                        required: 'Это поле обязательно',
-                        pattern: {
-                          value: /^\d{5}$/,
-                          message: 'некорректный формат',
-                        },
-                      })}
-                      type="text"
-                      aria-invalid={!!errors.ukrIndex}
-                      placeholder="49000"
-                      id="ukrIndex"
-                    />
-                    {errors?.ukrIndex && (
-                      <span
-                        id="ukrIndex-error"
-                        role="alert"
-                        className={styles.error}
-                      >
-                        {errors.ukrIndex.message}
-                      </span>
-                    )}
-                  </label>
+                  <div className={styles.field}>
+                    <label htmlFor="ukrIndex">
+                      <input
+                        className={styles.ukrIndexInput}
+                        {...register('ukrIndex', {
+                          required: 'Это поле обязательно',
+                          pattern: {
+                            value: /^\d{5}$/,
+                            message: 'некорректный формат',
+                          },
+                        })}
+                        type="text"
+                        aria-invalid={!!errors.ukrIndex}
+                        placeholder="49000"
+                        id="ukrIndex"
+                      />
+                      {errors?.ukrIndex && (
+                        <span
+                          id="ukrIndex-error"
+                          role="alert"
+                          className={styles.error}
+                        >
+                          {errors.ukrIndex.message}
+                        </span>
+                      )}
+                    </label>
+                  </div>
 
-                  <label htmlFor="ukrCity">
-                    <input
-                      className={styles.ukrCityInput}
-                      {...register('ukrCity', {
-                        required: 'Это поле обязательно',
-                      })}
-                      aria-invalid={!!errors.ukrCity}
-                      aria-describedby="ukrCity-error"
-                      placeholder="Город"
-                      type="text"
-                      id="ukrCity"
-                    />
-                    {errors?.ukrCity && (
-                      <span
-                        id="ukrCity-error"
-                        role="alert"
-                        className={styles.error}
-                      >
-                        {errors.ukrCity.message}
-                      </span>
-                    )}
-                  </label>
+                  <div className={styles.field}>
+                    <label htmlFor="ukrCity">
+                      <input
+                        className={styles.ukrCityInput}
+                        {...register('ukrCity', {
+                          required: 'Это поле обязательно',
+                        })}
+                        aria-invalid={!!errors.ukrCity}
+                        aria-describedby="ukrCity-error"
+                        placeholder="Город"
+                        type="text"
+                        id="ukrCity"
+                      />
+                      {errors?.ukrCity && (
+                        <span
+                          id="ukrCity-error"
+                          role="alert"
+                          className={styles.error}
+                        >
+                          {errors.ukrCity.message}
+                        </span>
+                      )}
+                    </label>
+                  </div>
 
-                  <label htmlFor="ukrStreet">
-                    <input
-                      className={styles.ukrStreetInput}
-                      {...register('ukrStreet', {
-                        required: 'Введите название улицы',
-                      })}
-                      type="text"
-                      aria-invalid={!!errors.ukrStreet}
-                      aria-describedby="ukrStreet-error"
-                      placeholder="Улица"
-                      id="ukrStreet"
-                    />
-                    {errors?.ukrStreet && (
+                  <div className={styles.field}>
+                    <label htmlFor="ukrStreet">
+                      <input
+                        className={styles.ukrStreetInput}
+                        {...register('ukrStreet', {
+                          required: 'Введите название улицы',
+                        })}
+                        type="text"
+                        aria-invalid={!!errors.ukrStreet}
+                        aria-describedby="ukrStreet-error"
+                        placeholder="Улица"
+                        id="ukrStreet"
+                      />
+                      {errors?.ukrStreet && (
+                        <span
+                          id="ukrStreet-error"
+                          role="alert"
+                          className={styles.error}
+                        >
+                          {errors.ukrStreet?.message}
+                        </span>
+                      )}
+                    </label>
+                  </div>
+
+                  <div className={styles.field}>
+                    <label htmlFor="ukrHouse">
+                      <input
+                        className={styles.ukrHouseInput}
+                        {...register('ukrHouse', {
+                          required: 'Введите номер дома',
+                        })}
+                        type="text"
+                        placeholder="Дом"
+                        id="ukrHouse"
+                        aria-invalid={!!errors.ukrStreet}
+                      />
                       <span
                         id="ukrStreet-error"
                         role="alert"
@@ -407,48 +481,31 @@ const Cart: FC = () => {
                       >
                         {errors.ukrStreet?.message}
                       </span>
-                    )}
-                  </label>
-                  <label htmlFor="ukrHouse">
-                    <input
-                      className={styles.ukrHouseInput}
-                      {...register('ukrHouse', {
-                        required: 'Введите номер дома',
-                      })}
-                      type="text"
-                      placeholder="Дом"
-                      id="ukrHouse"
-                      aria-invalid={!!errors.ukrStreet}
-                    />
-                    <span
-                      id="ukrStreet-error"
-                      role="alert"
-                      className={styles.error}
-                    >
-                      {errors.ukrStreet?.message}
-                    </span>
-                  </label>
+                    </label>
+                  </div>
 
-                  <label htmlFor="ukrApartment">
-                    <input
-                      className={styles.ukrApartment}
-                      {...register('ukrApartment')}
-                      type="text"
-                      aria-invalid={!!errors.ukrApartment}
-                      aria-describedby="ukrApartment-error"
-                      placeholder="квартира"
-                      id="ukrApartment"
-                    />
-                    {errors?.ukrApartment && (
-                      <span
-                        id="ukrApartment-error"
-                        role="alert"
-                        className={styles.error}
-                      >
-                        {errors.ukrApartment?.message}
-                      </span>
-                    )}
-                  </label>
+                  <div className={styles.field}>
+                    <label htmlFor="ukrApartment">
+                      <input
+                        className={styles.ukrApartment}
+                        {...register('ukrApartment')}
+                        type="text"
+                        aria-invalid={!!errors.ukrApartment}
+                        aria-describedby="ukrApartment-error"
+                        placeholder="квартира"
+                        id="ukrApartment"
+                      />
+                      {errors?.ukrApartment && (
+                        <span
+                          id="ukrApartment-error"
+                          role="alert"
+                          className={styles.error}
+                        >
+                          {errors.ukrApartment?.message}
+                        </span>
+                      )}
+                    </label>
+                  </div>
                 </div>
               </fieldset>
             )}

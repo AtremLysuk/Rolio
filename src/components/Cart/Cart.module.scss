@@ -24,7 +24,7 @@
   min-height: 90vh;
   border-radius: 10px;
 
-  @media(width <= 650px) {
+  @media (width <= 650px) {
     min-width: 90vw;
     min-width: 90dvw;
     max-width: 92%;
@@ -41,6 +41,10 @@
   background-color: transparent;
   border: none;
   cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--color-focus);
+  }
 }
 .items {
   display: grid;
@@ -53,8 +57,8 @@
   align-items: center;
   background: rgba(228, 235, 206, 0.25);
 
-  @media(width <= 450px) {
-  flex-direction: column;
+  @media (width <= 450px) {
+    flex-direction: column;
   }
 }
 .itemBody {
@@ -63,9 +67,7 @@
   align-items: center;
   gap: 15px;
 
-
   &Top {
-    
     font-weight: 400;
     font-size: 14px;
     color: var(--color-green);
@@ -139,7 +141,7 @@
     align-items: start;
     gap: 55px;
 
-    @media(width <= 990px) {
+    @media (width <= 990px) {
       flex-direction: column;
       justify-content: space-between;
       gap: 15px;
@@ -158,6 +160,15 @@
     padding: 8px 16px;
     border: 1px solid #d9d9d9;
     border-radius: 4px;
+    transition: border-color 0.3s ease;
+
+    &:focus-visible {
+      outline: 2px solid var(--color-focus);
+    }
+
+    &[aria-invalid='true'] {
+      border-color: #e74c3c;
+    }
   }
 
   ::placeholder {
@@ -176,25 +187,64 @@
   align-items: center;
   column-gap: 100px;
 
-  @media(width <= 450px) {
+  @media (width <= 450px) {
     column-gap: 20px;
   }
 
   label {
-    display: grid;
+    display: flex;
     font-weight: 700;
     font-size: 16px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     input {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      border: none;
 
-      margin-right: 10px;
+      &:focus-visible {
+        outline: 1px solid var(--color-focus);
+      }
     }
   }
 
   &UkrInput {
     margin-right: auto;
   }
+}
+
+.radioFake {
+  position: relative;
+  width: 15px;
+  height: 15px;
+  border-radius: 100%;
+  border: 1px solid var(--color-green);
+  display: inline-flex;
+  transform: translateX(-20px);
+
+  &::after {
+    position: absolute;
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 100%;
+    background-color: var(--color-green);
+    left: 50%;
+    top: 50%;
+    visibility: hidden;
+    opacity: 0;
+    transform: translate3d(-50%, -50%, 0);
+    transition: all 0.3s ease;
+  }
+}
+
+input[type='radio']:checked + span::after {
+  visibility: visible;
+  opacity: 1;
 }
 .nameLabel {
   min-width: 300px;
@@ -220,13 +270,12 @@
   flex-direction: column;
 }
 .newPochta {
+  padding-top: 7px;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: stretch;
   flex-wrap: wrap;
   gap: 24px;
-
-  
 }
 
 .ukrPochta {
@@ -262,7 +311,6 @@
   border: 1px solid #d9d9d9;
   border-radius: 5px;
 }
-
 
 .formButtons {
   display: flex;

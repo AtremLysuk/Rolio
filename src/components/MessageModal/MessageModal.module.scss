@@ -61,6 +61,8 @@
 .closeBtn {
   background-color: transparent;
   border: none;
+  border-radius: 6px;
+  padding: 6px 6px 0 6px;
 
   svg {
     path {
@@ -102,6 +104,7 @@
     padding-block: 8px;
     padding-left: 16px;
     border: 1px solid #d6d6d6;
+    transition: border-color .3s ease;
 
     &::placeholder {
       font-weight: 400;
@@ -111,7 +114,11 @@
     }
 
     &:focus-visible {
-      outline: 1px solid rgb(244, 244, 106);
+      outline: 1px solid var(--color-focus);
+    }
+
+    &[aria-invalid="true"] {
+      border-color: #e74c3c;
     }
   }
 }
@@ -138,7 +145,7 @@
     background: var(--green-gradient);
   }
 }
-.field{
+.field {
   display: flex;
   flex-direction: column;
 }

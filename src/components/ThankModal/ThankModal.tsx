@@ -19,25 +19,35 @@ const ThankModal: FC = () => {
 
   useGSAP(
     () => {
-      if (!isTnxMessageOpen) return;
+      if (!isTnxMessageOpen || !closeBtnRef.current) return;
 
-      gsap.fromTo(
+      const tl = gsap.timeline();
+
+      tl.fromTo(
         wrapperRef.current,
         { opacity: 0 },
         { opacity: 1, duration: 0.5 }
       );
 
-      gsap.fromTo(
+      tl.fromTo(
         containerRef.current,
         { opacity: 0, y: -50 },
-        { opacity: 1, y: 0, duration: 0.4, ease: 'power3.out' }
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.4,
+          ease: 'power3.out',
+          onComplete: () => {
+            closeBtnRef.current!.focus();
+          },
+        }
       );
     },
     { dependencies: [isTnxMessageOpen] }
   );
 
   const closeThankModal = () => {
-    if(!isTnxMessageOpen) return
+    if (!isTnxMessageOpen) return;
     const tl = gsap.timeline({
       onComplete: () => {
         dispatch(tnxModalClose());
@@ -49,9 +59,12 @@ const ThankModal: FC = () => {
   };
 
   useEffect(() => {
+    if (!isTnxMessageOpen) return;
+
+    console.log(document.activeElement);
     const listener = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        dispatch(tnxModalClose());
+        closeThankModal();
       }
     };
 
@@ -71,7 +84,7 @@ const ThankModal: FC = () => {
       aria-labelledby="thank-title"
       onClick={(e: React.MouseEvent<HTMLDivElement>) => {
         if (e.target === e.currentTarget) {
-          closeThankModal()
+          closeThankModal();
         }
       }}
     >
@@ -84,8 +97,9 @@ const ThankModal: FC = () => {
             className={styles.closeBtn}
             ref={closeBtnRef}
             aria-label="modal close button"
+            autoFocus
             onClick={() => {
-              closeThankModal()
+              closeThankModal();
             }}
           >
             <svg

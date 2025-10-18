@@ -39,33 +39,10 @@ const App: React.FC = () => {
 
 
   useEffect(() => {
-    const escapeListener = (e: KeyboardEvent): void => {
-      if (e.key !== 'Escape') return;
-
-      dispatch(openCartToggle());
-    };
-    if (isCartOpen && lenis) {
-      document.addEventListener('keydown', escapeListener);
-    }
-    return () => {
-      document.removeEventListener('keydown', escapeListener);
-    };
-  }, [isCartOpen]);
-
-  useEffect(() => {
     isMessageOpen || isTnxMessageOpen || isCartOpen ? lenis?.stop() : lenis?.start();
   }, [isMessageOpen, isTnxMessageOpen, isCartOpen]);
 
-  // useEffect(() => {
 
-  //   if (isCartOpen && lenis) {
-  //     lenis.stop();
-
-  //   } else {
-  //     lenis?.start();
-
-  //   }
-  // }, [isCartOpen]);
 
   return (
     <>
