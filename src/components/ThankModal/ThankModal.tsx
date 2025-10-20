@@ -60,8 +60,6 @@ const ThankModal: FC = () => {
 
   useEffect(() => {
     if (!isTnxMessageOpen) return;
-
-    console.log(document.activeElement);
     const listener = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         closeThankModal();

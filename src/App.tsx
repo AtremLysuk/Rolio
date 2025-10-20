@@ -8,13 +8,11 @@ import About from './sections/About/About';
 import Reviews from './sections/Reviews/Reviews';
 import Cart from './components/Cart/Cart';
 import { useAppSelector, useAppDispatch } from './Hooks/hooks';
-import { openCartToggle } from './redux/cartSlice';
 import Delivery from './sections/Delivery/Delivery';
 import Contacts from './sections/Contacts/Contacts';
 import Footer from './sections/Footer/Footer';
 import { MessageModal } from './components/MessageModal/MessageModal';
 import ThankModal from './components/ThankModal/ThankModal';
-
 import ModalPortal from './components/ModalPortal/ModalPortal';
 
 const App: React.FC = () => {
@@ -22,6 +20,8 @@ const App: React.FC = () => {
   const isTnxMessageOpen = useAppSelector(
     (state) => state.message.isTnxMessageOpen
   );
+
+  const cartItems = useAppSelector((state) => state.cart.cartItems);
 
   const dispatch = useAppDispatch();
   const lenis = useLenis();
@@ -37,11 +37,21 @@ const App: React.FC = () => {
     return () => gsap.ticker.remove(update);
   }, [lenis]);
 
-
   useEffect(() => {
-    isMessageOpen || isTnxMessageOpen || isCartOpen ? lenis?.stop() : lenis?.start();
+    isMessageOpen || isTnxMessageOpen || isCartOpen
+      ? lenis?.stop()
+      : lenis?.start();
   }, [isMessageOpen, isTnxMessageOpen, isCartOpen]);
 
+  useEffect(() => {
+    if(cartItems.length === 0  ) {
+      localStorage.removeItem('oilCart')
+    }
+    if (cartItems.length > 0) {
+      localStorage.setItem('oilCart', JSON.stringify(cartItems));
+    } 
+
+  }, [cartItems]);
 
 
   return (

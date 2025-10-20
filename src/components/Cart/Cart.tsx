@@ -7,6 +7,7 @@ import {
   openCartToggle,
   plusItem,
   removeItem,
+  clearCart,
 } from './../../redux/cartSlice';
 import { FC, useEffect, useRef, useState } from 'react';
 import { useLenis } from 'lenis/react';
@@ -31,20 +32,55 @@ const Cart: FC = () => {
   const overlayRef = useRef<HTMLDivElement | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const closeBtnRef = useRef<HTMLButtonElement | null>(null);
+  const submitBtnRef = useRef<HTMLButtonElement | null>(null);
   const dispatch = useAppDispatch();
   const { isCartOpen, cartItems } = useAppSelector((state) => state.cart);
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
     reset,
   } = useForm<Tfields>({ mode: 'onChange', shouldUnregister: true });
 
   const lenis = useLenis();
 
   const onSubmit = (data) => {
-    console.log(data);
+    if (cartItems.length === 0) {
+      alert('Корзина пуста');
+      return  ;
+    }
+    const newOrder = {
+      orderId: 1,
+      client: [
+        {
+          name: data.name,
+          phone: data.phone,
+        },
+      ],
+      delivery: [
+        {
+          method: deliveryType,
+          methodInfo: {
+            newCity: data.newCity,
+            newOffice: data.newOffice,
+            ukrIndex: data.ukrIndex,
+            ukrCity: data.ukrCity,
+            ukrStreet: data.ukrStreet,
+            ukrHouse: data.ukrHouse,
+            ukrApartment: data.ukrApartment,
+          },
+        },
+      ],
+
+      message: data.message,
+      oderItems: cartItems,
+    };
+
+    dispatch(clearCart());
+    reset();
+
+    console.log('newOrder:', newOrder);
   };
 
   useGSAP(
@@ -203,7 +239,6 @@ const Cart: FC = () => {
               <div className={styles.item} key={item.id}>
                 <div className={styles.itemImage}>
                   <img
-                    className=""
                     src={item.cartImgSrc}
                     alt=""
                     width="90"
@@ -540,7 +575,12 @@ const Cart: FC = () => {
                 />
               </label>
               <div className={styles.formButtons}>
-                <button className={styles.submitBtn} type="submit">
+                <button
+                  className={styles.submitBtn}
+                  type="submit"
+                  ref={submitBtnRef}
+                  disabled={!isValid}
+                >
                   ОТПРАВИТЬ ЗАКАЗ
                 </button>
                 <button

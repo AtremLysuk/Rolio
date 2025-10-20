@@ -1,15 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
-
+import { getCartItemsFromStorage } from '@/scripts/getCartItemsFromStorage';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from './store';
 
-export interface CartItem {
+export type CartItem = {
   id: number;
   title: string;
   price: number;
   cartImgSrc: string;
   count: number;
-}
+};
 
 export interface CartState {
   cartItems: CartItem[];
@@ -18,7 +18,7 @@ export interface CartState {
 }
 
 const initialState: CartState = {
-  cartItems: [],
+  cartItems: getCartItemsFromStorage(),
   totalPrice: 0,
   isCartOpen: false,
 };
@@ -88,9 +88,19 @@ export const cartSlice = createSlice({
         (el) => el.id !== action.payload
       );
     },
+
+    clearCart: (state) => {
+      state.cartItems = [];
+    },
   },
 });
 
-export const { addItem, openCartToggle, minusItem, removeItem, plusItem } =
-  cartSlice.actions;
+export const {
+  addItem,
+  openCartToggle,
+  minusItem,
+  removeItem,
+  plusItem,
+  clearCart,
+} = cartSlice.actions;
 export default cartSlice.reducer;
