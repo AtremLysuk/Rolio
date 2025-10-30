@@ -10,17 +10,22 @@ export type CartItem = {
   cartImgSrc: string;
   count: number;
 };
+type Status = 'pending' | 'rejected' | 'fulfilled' | 'idle';
 
 export interface CartState {
   cartItems: CartItem[];
   totalPrice: number;
   isCartOpen: boolean;
+  status: Status;
+  error: null | string;
 }
 
 const initialState: CartState = {
   cartItems: getCartItemsFromStorage(),
   totalPrice: 0,
   isCartOpen: false,
+  status: 'idle',
+  error: null,
 };
 
 export const cartSlice = createSlice({

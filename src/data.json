@@ -4,6 +4,7 @@
     "title": "Масло Для салата",
     "cartImgSrc": "/images/cart/cartSalatIImage.png",
     "price": 125,
+    "imgSrc":"/images/oil/salat.png",
     "subtitle": "Наши продукты",
     "text": "Название говорит само за себя. Это идеальная заправка, которая даже скучной и привычной капусте придаст неповторимый вкус и аромат.",
     "images": [
@@ -33,6 +34,7 @@
     "title": "Масло Для мяса",
     "cartImgSrc": "/images/cart/cartMeatImage.png",
     "price": 125,
+    "imgSrc":"/images/oil/meat.png",
     "subtitle": "Наши продукты",
     "text": "Идеальное решение для легкого и быстрого маринада мяса, можно добавить капельку масла и после приготовления.",
     "images": [
@@ -63,6 +65,7 @@
     "cartImgSrc": "/images/cart/cartItalyImage.png",
     "price": 125,
     "subtitle": "Наши продукты",
+    "imgSrc":"/images/oil/italy.png",
     "text": "Идеальное решение для легкого и быстрого маринада мяса, можно добавить капельку масла и после приготовления.",
     "images": [
       {
@@ -91,6 +94,7 @@
     "title": "Масло Восточное",
     "cartImgSrc": "/images/cart/cartVostochnoeImage.png",
     "price": 125,
+    "imgSrc":"/images/oil/vostochnoe.png",
     "subtitle": "Наши продукты",
     "text": "Идеальное решение для легкого и быстрого маринада мяса, можно добавить капельку масла и после приготовления.",
     "images": [

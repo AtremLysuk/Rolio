@@ -1,27 +1,25 @@
-@use '../../scss/helpers/' as * ;
+@use '../../scss/helpers/' as *;
 
 .hero {
+  &__spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 610px;
 
-  // .hero__container
+    @media (width <= 1366px) {
+      height: 504px;
+    }
 
-  &__container {
+    @media (width <= 900px) {
+      height: 827px;
+    }
   }
-
-  // .hero__inner
-
-  &__inner {
+  @media (width <= 590px) {
+    height: 978px;
   }
-
-  // .hero__slider
- 
-  &__slider {
-
-    // @media(width <= 1366px) {
-    // //  max-height: 504px;
-    // }
-
-    // @media(width <= 900px) {
-    //  height: auto;
-    // }
+  @media (width <= 590px) {
+    height: 867px;
   }
 }

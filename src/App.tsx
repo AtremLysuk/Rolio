@@ -1,4 +1,4 @@
-import { ReactLenis, useLenis } from 'lenis/react';
+import { useLenis } from 'lenis/react';
 import { gsap } from 'gsap';
 import { useEffect } from 'react';
 import Header from './sections/Header/Header';

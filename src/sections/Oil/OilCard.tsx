@@ -6,11 +6,13 @@ import { addItem, minusItem, plusItem } from '../../redux/cartSlice';
 import { useAppDispatch, useAppSelector } from '../../Hooks/hooks';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
+import type { ItemType } from '@/redux/itemsSlice';
 
-import { IProducts } from './Oil';
-
-interface OilCardProps extends IProducts {
+interface OilCardProps extends ItemType {
   index?: number;
+  imgSrc?: string;
+  ingridients?: string;
+  images: [];
 }
 
 const OilCard: FC<OilCardProps> = ({
@@ -28,6 +30,7 @@ const OilCard: FC<OilCardProps> = ({
   const dispatch = useAppDispatch();
   const cartItems = useAppSelector((state) => state.cart.cartItems);
   const itemCountRef = useRef<HTMLSpanElement | null>(null);
+  const { status, error } = useAppSelector((state) => state.items);
 
   useGSAP(
     () => {
@@ -47,6 +50,7 @@ const OilCard: FC<OilCardProps> = ({
     },
     { dependencies: [productCount] }
   );
+
 
   return (
     <li className={styles.card} key={id}>
