@@ -45,7 +45,7 @@ const Cart: FC = () => {
 
 	const lenis = useLenis();
 
-	const onSubmit = (data) => {
+	const onSubmit = (data: Tfields) => {
 		if (cartItems.length === 0) {
 			alert('Корзина пуста');
 			return;

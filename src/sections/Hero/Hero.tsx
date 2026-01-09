@@ -24,6 +24,7 @@ export type TSlideData = {
 	cartImgSrc: string;
 	price: number;
 	slideHandlerbyColor?: (color: Color) => void;
+	index?: number;
 };
 
 const Hero: React.FC = () => {
@@ -89,7 +90,7 @@ const Hero: React.FC = () => {
 													activeSlideRef.current = el
 												}
 											}}
-											index={index}
+
 											{...slide}
 											key={slide.id}
 											isActive={activeSlide === index}
