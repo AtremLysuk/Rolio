@@ -4,44 +4,38 @@ import svgr from 'vite-plugin-svgr';
 import path from 'path';
 
 export default defineConfig({
-  plugins: [
-    react(),
-    svgr({
-      svgrOptions: {
-        // Позволяет импортировать SVG как компонент React:
-        // import { ReactComponent as Logo } from './logo.svg'
-        icon: true,
-      },
-    }),
-  ],
+	plugins: [
+		react(),
+		svgr({
+			svgrOptions: {
+				icon: true,
+			},
+		}),
+	],
 
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, 'src'),
-      src: path.resolve(__dirname, 'src'),
-      '@scss': path.resolve(__dirname, 'src/scss'),
-    },
-  },
+	resolve: {
+		alias: {
+			'@': path.resolve(__dirname, 'src'),
+			'@scss': path.resolve(__dirname, 'src/scss'),
+		},
+	},
 
-  css: {
-    preprocessorOptions: {
-      scss: {
-        // чтобы можно было писать просто: @use '@scss/helpers' as *;
-        includePaths: [path.resolve(__dirname, 'src')],
-        // опционально — глобальные SCSS-переменные и mixins:
-        // additionalData: `@use '@scss/helpers' as *;`
-      },
-    },
-  },
+	css: {
+		preprocessorOptions: {
+			scss: {
+				additionalData: `@use "@scss/helpers" as *;`,
+			},
+		},
+	},
 
-  server: {
-    port: 5173,
-    open: true,
-  },
+	server: {
+		port: 5173,
+		open: true,
+	},
 
-  build: {
-    outDir: 'dist',
-    sourcemap: false,
-    chunkSizeWarningLimit: 1000,
-  },
+	build: {
+		outDir: 'dist',
+		sourcemap: false,
+		chunkSizeWarningLimit: 1000,
+	},
 });
