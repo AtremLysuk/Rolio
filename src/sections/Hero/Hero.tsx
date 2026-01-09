@@ -90,18 +90,15 @@ const Hero: React.FC = () => {
 													activeSlideRef.current = el
 												}
 											}}
-
 											{...slide}
 											key={slide.id}
 											isActive={activeSlide === index}
-
 											slideHandlerbyColor={(color: string) => {
 												const targetIndex = items.findIndex((el) => el.color === color)
 												if (targetIndex !== -1) {
 													setActiveSlide(targetIndex);
 													swiperRef.current?.slideTo(targetIndex);
 												}
-
 											}}
 										/>
 									</SwiperSlide>

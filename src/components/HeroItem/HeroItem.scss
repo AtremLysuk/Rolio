@@ -337,6 +337,12 @@
     background-color: transparent;
     cursor: pointer;
 
+    &:disabled {
+      cursor: not-allowed;
+      color: var(--color-disabled);
+      border-color: var(--color-disabled);
+    }
+
     @include hover {
       border-color: var(--color-accent);
     }

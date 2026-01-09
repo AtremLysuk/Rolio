@@ -5,6 +5,7 @@
   --color-dark: #000;
   --color-white: #fff;
   --color-text: #4a4a4a;
+  --color-disabled: rgba(206, 195, 194, 0.5);
 
   --color-green: #688800;
   --color-green-light: #bfd087;
@@ -25,10 +26,10 @@
   --orange-gradient: linear-gradient(324deg, #ba6400 0%, #ff9d34 100%);
 
   --gradient: linear-gradient(
-    180deg,
-    rgba(226, 211, 206, 0) 0%,
-    rgba(226, 211, 206, 0.71) 42.71%,
-    #e2d3ce 100%
+      180deg,
+      rgba(226, 211, 206, 0) 0%,
+      rgba(226, 211, 206, 0.71) 42.71%,
+      #e2d3ce 100%
   );
 
   --border-radius-50: 50px;

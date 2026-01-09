@@ -183,10 +183,11 @@ const HeroItem: FC<HeroItemProps> = ({
 						<button
 							type="button"
 							className="body-count__minus"
+							disabled={itemCount < 1}
 							onClick={() => setItemCount((prev) => Math.max(0, prev - 1))}
 						>
 							-
-						</button>
+						</button>`
 						<span
 							className="body-count__value"
 							ref={countRef}

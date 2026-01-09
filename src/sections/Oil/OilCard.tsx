@@ -79,6 +79,7 @@ const OilCard: FC<OilCardProps> = ({
 						<button
 							className={styles.btnMinus}
 							aria-label={`decrease product ${title}count`}
+							disabled={productCount < 1}
 							onClick={() => {
 								if (productCount === 0) return;
 								setProductCount((prev) => prev - 1);
