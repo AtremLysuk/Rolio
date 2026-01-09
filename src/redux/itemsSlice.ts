@@ -33,7 +33,7 @@ interface FetchError {
   details?: string;
 }
 
-const FETCH_URL = 'src/data.json';
+const FETCH_URL = '/data.json';
 
 const initialItemsState: InitialItemsState = {
   items: [],

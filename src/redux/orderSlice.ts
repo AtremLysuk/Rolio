@@ -1,7 +1,7 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import type {CartItem} from './cartSlice';
 
-const BASE_URL = 'src/orderData.json';
+const BASE_URL = '/orderData.json';
 
 type Client = {
 	name: string;
