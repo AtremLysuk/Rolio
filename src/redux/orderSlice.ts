@@ -1,104 +1,111 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import type { CartItem } from './cartSlice';
+import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
+import type {CartItem} from './cartSlice';
 
 const BASE_URL = 'src/orderData.json';
 
 type Client = {
-  name: string;
-  phone: string;
+	name: string;
+	phone: string;
 };
 
 type MethodInfo = {
-  newCity?: string;
-  newOffice?: string;
-  ukrApartment?: string;
-  ukrCity?: string;
-  ukrHouse?: string;
-  ukrIndex?: string;
-  ukrStreet?: string;
+	newCity?: string;
+	newOffice?: string;
+	ukrApartment?: string;
+	ukrCity?: string;
+	ukrHouse?: string;
+	ukrIndex?: string;
+	ukrStreet?: string;
 };
 
 type Delivery = {
-  method: string;
-  methodInfo: MethodInfo;
+	method: string;
+	methodInfo: MethodInfo;
 };
 
-type OrderResponce = {
-  success: boolean;
-  message: string;
-};
 export type OrderItem = {
-  orderId: number;
-  client: Client;
-  delivery: Delivery;
-  order: CartItem[];
+	orderId: number;
+	client: Client;
+	delivery: Delivery;
+	order: CartItem[];
 };
 type OrderError = {
-  message: string;
-  status?: number;
-  details?: string;
+	message: string;
+	status?: number;
+	details?: string;
 };
 
 interface InitialOrderState {
-  orderItems: OrderItem[];
-  status: 'pending' | 'rejected' | 'fulfilled' | 'idle';
-  error: null | OrderError;
+	orderItems: OrderItem[];
+	status: 'pending' | 'rejected' | 'fulfilled' | 'idle';
+	error: null | OrderError;
 }
 
 export const fetchPostOrder = createAsyncThunk<
-  OrderItem,
-  void,
-  { rejectValue: OrderError }
->('order/fetchPostOrder', async (order: OrderItem, { rejectWithValue }) => {
-  try {
-    const res = await fetch(BASE_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(order),
-    });
+	OrderItem,
+	OrderItem,
+	{ rejectValue: OrderError }
+>('order/fetchPostOrder', async (order: OrderItem, {rejectWithValue}) => {
+	try {
+		const res = await fetch(BASE_URL, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify(order),
+		});
 
-    if (!res.ok) {
-      return rejectWithValue({
-        message: 'Fetch is Fail',
-        status: res.status,
-      });
-    }
-
-    const data = await res.json();
-
-    return data;
-  } catch (error) {
-    return rejectWithValue({
-      message: 'Feth Post Failed',
-      details: (error as Error).message,
-    });
-  }
+		if (!res.ok) {
+			return rejectWithValue({
+				message: 'Fetch is Fail',
+				status: res.status,
+			});
+		}
+		const data = await res.json() as OrderItem
+		return data
+	} catch (error) {
+		return rejectWithValue({
+			message: 'Feth Post Failed',
+			details: (error as Error).message,
+		});
+	}
 });
 
 const initialState: InitialOrderState = {
-  orderItems: [],
-  status: 'idle',
-  error: null,
+	orderItems: [],
+	status: 'idle',
+	error: null,
 };
 
 const orderSlice = createSlice({
-  name: 'order',
-  initialState,
+		name: 'order',
+		initialState,
 
-  reducers: {
-    addOrder: (state, action: PayloadAction<OrderItem>) => {
-      state.orderItems.push(action.payload);
-    },
-  },
+		reducers: {
+			addOrder: (state, action: PayloadAction<OrderItem>) => {
+				state.orderItems.push(action.payload);
+			},
+		},
 
-  extraReducers: (builder) => {
-    builder.addCase(fetchPostOrder.pending, (state) => {});
-    builder.addCase(fetchPostOrder.fulfilled, (state) => {});
-    builder.addCase(fetchPostOrder.rejected, (state) => {});
-  },
-});
+		extraReducers: (builder) => {
+			builder.addCase(fetchPostOrder.pending, (state) => {
+				state.status = 'pending';
+			});
+			builder.addCase(fetchPostOrder.fulfilled, (state, action: PayloadAction<OrderItem>) => {
+					state.status = 'fulfilled'
+					state.orderItems.push(action.payload);
 
-const { addOrder } = orderSlice.actions;
+				}
+			)
+
+			builder.addCase(fetchPostOrder.rejected, (state, action) => {
+				state.status = 'rejected';
+				state.error = action.payload ?? {message: 'Unknown error'};
+
+			})
+		},
+	})
+;
+
+export const {addOrder} = orderSlice.actions;
 export default orderSlice.reducer;

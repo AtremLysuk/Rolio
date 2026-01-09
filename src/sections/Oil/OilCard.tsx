@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import Button from '../../components/Button/Button';
 import styles from './OilCard.module.scss';
 import {addItem, minusItem, plusItem} from '../../redux/cartSlice';
-import {useAppDispatch, useAppSelector} from '../../Hooks/hooks';
+import {useAppDispatch} from '../../Hooks/hooks';
 import gsap from 'gsap';
 import {useGSAP} from '@gsap/react';
 import type {ItemType} from '@/redux/itemsSlice';
@@ -12,7 +12,7 @@ interface OilCardProps extends ItemType {
 	index?: number;
 	imgSrc?: string;
 	ingridients?: string;
-	images: [];
+	// images: [];
 }
 
 const OilCard: FC<OilCardProps> = ({
@@ -51,7 +51,7 @@ const OilCard: FC<OilCardProps> = ({
 
 
 	return (
-		<li
+		<article
 			className={styles.card}
 			key={id}
 		>
@@ -136,7 +136,7 @@ const OilCard: FC<OilCardProps> = ({
 					/>
 				</div>
 			</div>
-		</li>
+		</article>
 	);
 };
 
