@@ -8,10 +8,12 @@
   text-align: center;
   margin-bottom: 40px;
 }
+
 .items {
   display: grid;
   row-gap: 32px;
 }
+
 .item {
   position: relative;
   display: flex;
@@ -85,6 +87,7 @@
 
     img {
       max-width: 100%;
+
       img {
         max-width: 100%;
       }
@@ -135,6 +138,7 @@
     }
   }
 }
+
 .contentTitle {
   margin-bottom: 30px;
   @media (width <= 500px) {
@@ -143,6 +147,7 @@
     margin-block: 10px;
   }
 }
+
 .contentText {
   font-weight: 300;
   font-size: 16px;
@@ -154,4 +159,13 @@
     line-height: 1.66667;
     text-align: center;
   }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }

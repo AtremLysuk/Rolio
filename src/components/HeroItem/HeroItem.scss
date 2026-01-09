@@ -195,12 +195,15 @@
     &--green {
       color: var(--color-green);
     }
+
     &--emerald {
       color: var(--color-emerald);
     }
+
     &--red {
       color: var(--color-red);
     }
+
     &--orange {
       color: var(--color-orange);
     }
@@ -208,16 +211,22 @@
 }
 
 .header-links {
-  display: flex;
-  align-items: center;
-  justify-content: start;
-  flex-wrap: wrap;
-  row-gap: 15px;
 
-  @media (width <= 900px) {
-    justify-content: center;
-    margin-inline: auto;
+  > ul {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    flex-wrap: wrap;
+    row-gap: 15px;
+    list-style: none;
+
+    @media (width <= 900px) {
+      justify-content: center;
+      align-items: center;
+      margin-inline: auto;
+    }
   }
+
 
   &__link {
     padding: 7px 16px;
@@ -230,12 +239,14 @@
     &--green {
       color: #bfd087;
       border: 1px solid #bfd087;
+
       &.active {
         color: #546b06;
         background-color: #bfd087;
         border-color: #bfd087;
       }
     }
+
     &--red {
       color: #e8847e;
       border: 1px solid #e8847e;
@@ -246,9 +257,11 @@
         border-color: #e8847e;
       }
     }
+
     &--orange {
       color: #f4b979;
       border: 1px solid #f4b979;
+
       &.active {
         color: #bd690d;
         background-color: #f4b979;
@@ -272,6 +285,7 @@
     margin-left: fluid(40, 15);
   }
 }
+
 .slide-body {
   display: grid;
   row-gap: fluid(28, 24);
@@ -323,12 +337,14 @@
     background-color: transparent;
     cursor: pointer;
 
-    @include  hover {
-      border-color: var(--color-accent) ;
+    @include hover {
+      border-color: var(--color-accent);
     }
   }
+
   &__minus {
   }
+
   &__value {
     font-weight: 500;
     font-size: 24px;
@@ -374,4 +390,8 @@
       min-width: 100%;
     }
   }
+}
+
+[aria-hidden="true"] {
+  pointer-events: none;
 }
