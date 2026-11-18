@@ -76,7 +76,7 @@ const Contacts: FC = () => {
 				<div className={styles.inner}>
 					<div className={styles.image}>
 						<img
-							src="/images/contacts/contscts-img.jpg"
+							src="/images/contacts/contscts-img.webp"
 							alt=""
 							width="740"
 							height="472"

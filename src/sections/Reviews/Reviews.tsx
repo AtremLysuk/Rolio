@@ -4,15 +4,15 @@ import {Swiper, SwiperSlide} from 'swiper/react';
 
 const Reviews = () => {
 	const reviewsItems: string[] = [
-		'/images/reviews/1.jpg',
-		'/images/reviews/2.jpg',
-		'/images/reviews/3.jpg',
-		'/images/reviews/1.jpg',
-		'/images/reviews/2.jpg',
-		'/images/reviews/3.jpg',
-		'/images/reviews/1.jpg',
-		'/images/reviews/2.jpg',
-		'/images/reviews/3.jpg',
+		'/images/reviews/1.webp',
+		'/images/reviews/2.webp',
+		'/images/reviews/3.webp',
+		'/images/reviews/1.webp',
+		'/images/reviews/2.webp',
+		'/images/reviews/3.webp',
+		'/images/reviews/1.webp',
+		'/images/reviews/2.webp',
+		'/images/reviews/3.webp',
 	];
 
 	return (

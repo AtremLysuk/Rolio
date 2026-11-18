@@ -1,69 +1,75 @@
-# React + TypeScript + Vite
+# R.olio — Infused Olive Oil Store
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A responsive landing page with a working cart for a small brand of flavoured olive oils.
+Built with React, TypeScript and Redux Toolkit, with GSAP animations and smooth scrolling.
 
-Currently, two official plugins are available:
+**Live demo:** [rolio.vercel.app](https://rolio.vercel.app)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+<!-- Screenshots: add files to docs/screenshots and uncomment
+![Desktop](docs/screenshots/desktop.png)
+![Mobile](docs/screenshots/mobile.png)
+-->
 
-## Expanding the ESLint configuration
+> The UI is in Russian. There is no backend — orders and messages are not sent anywhere;
+> the site shows a confirmation instead.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Features
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- **Product slider** in the hero section — slides change colour theme with the selected oil
+- **Cart** on Redux Toolkit: add, change quantity, remove; total price and item count are
+  derived with selectors; the cart is saved to `localStorage` and restored on reload
+- **Checkout form** with React Hook Form: validation, two delivery methods
+  (Nova Poshta / Ukrposhta) with their own fields, confirmation modal after submit
+- **Contact form** in a modal with validation
+- **Animations** with GSAP: modal transitions, text reveal on scroll (ScrollTrigger + SplitText),
+  quantity counter; smooth scrolling with Lenis
+- **Responsive layout** — product grid turns into a Swiper carousel on smaller screens
+- **Accessibility:** focus trap and Escape in all modals, labelled form fields with
+  announced errors, ARIA attributes for sliders and buttons
+- **Optimised images** — all images in WebP (≈4 MB → 0.8 MB)
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+## Tech stack
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+| Area | Tools |
+|---|---|
+| UI | React 19, TypeScript |
+| State | Redux Toolkit, React Redux |
+| Forms | React Hook Form |
+| Animation | GSAP (ScrollTrigger, SplitText), Lenis |
+| Slider | Swiper |
+| Styles | SCSS, CSS Modules, postcss-pxtorem |
+| Accessibility | focus-trap-react |
+| Build | Vite, ESLint |
+| Hosting | Vercel |
+
+## Getting started
+
+```bash
+git clone https://github.com/AtremLysuk/Rolio.git
+cd Rolio
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+| Command | Description |
+|---|---|
+| `npm run dev` | Start the dev server |
+| `npm run build` | Type-check and build for production |
+| `npm run preview` | Preview the production build |
+| `npm run lint` | Run ESLint |
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Project structure
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+src/
+├── sections/     # page sections: Hero, Oil, About, Reviews, Delivery, Contacts, Footer
+├── components/   # Cart, modals, buttons, icons, skeleton
+├── redux/        # store and slices: cart, items, message
+├── Hooks/        # typed Redux hooks, Lenis provider, useMatchMedia
+└── scss/         # variables, mixins, global styles
+public/
+├── data.json     # product catalogue
+└── images/       # WebP images
+scripts/
+└── convert-images.mjs   # PNG/JPG → WebP converter (sharp)
 ```
