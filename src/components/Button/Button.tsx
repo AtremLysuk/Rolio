@@ -8,7 +8,8 @@ type ButtonProps = {
   color?: string;
   title?: string;
   href?: string;
-
+  ariaLabel?: string;
+  disabled?: boolean;
   onClick?: () => void;
 };
 
@@ -17,20 +18,36 @@ const Button: FC<ButtonProps> = ({
   title,
   className,
   href,
+  ariaLabel,
+  disabled,
   onClick,
 }) => {
-  const Tag = href ? 'a' : 'button';
+  const classes = classNames(className, 'button', color && `button--${color}`);
+
+  if (href) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={classes}
+        aria-label={ariaLabel}
+      >
+        {title}
+      </a>
+    );
+  }
 
   return (
-    <Tag
-      target="_blanc"
-      type={href ? undefined : 'button'}
-      href={href}
-      className={classNames(className, 'button', color && `button--${color}`)}
+    <button
+      type="button"
+      className={classes}
+      aria-label={ariaLabel}
+      disabled={disabled}
       onClick={onClick}
     >
       {title}
-    </Tag>
+    </button>
   );
 };
 

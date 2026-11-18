@@ -1,31 +1,28 @@
 import {FC, useState, useRef} from 'react';
 import classNames from 'classnames';
-import Button from '../../components/Button/Button';
-import styles from './OilCard.module.scss';
-import {addItem, minusItem, plusItem} from '../../redux/cartSlice';
-import {useAppDispatch} from '../../Hooks/hooks';
 import gsap from 'gsap';
 import {useGSAP} from '@gsap/react';
+import Button from '../../components/Button/Button';
+import styles from './OilCard.module.scss';
+import {addItem} from '../../redux/cartSlice';
+import {useAppDispatch} from '../../Hooks/hooks';
 import type {ItemType} from '@/redux/itemsSlice';
 
 interface OilCardProps extends ItemType {
 	index?: number;
 	imgSrc?: string;
-	ingridients?: string;
-	// images: [];
 }
 
 const OilCard: FC<OilCardProps> = ({
-	                                   id,
-	                                   imgSrc,
-	                                   index,
-	                                   color,
-	                                   title,
-	                                   text,
-	                                   ingridients,
-	                                   price,
-	                                   cartImgSrc,
-                                   }) => {
+	id,
+	imgSrc,
+	index,
+	color,
+	title,
+	text,
+	price,
+	cartImgSrc,
+}) => {
 	const [productCount, setProductCount] = useState<number>(0);
 	const dispatch = useAppDispatch();
 	const itemCountRef = useRef<HTMLSpanElement | null>(null);
@@ -37,24 +34,27 @@ const OilCard: FC<OilCardProps> = ({
 			gsap.fromTo(
 				itemCountRef.current,
 				{scale: 1.4, opacity: 0, y: -10},
-				{
-					scale: 1,
-					opacity: 1,
-					y: 0,
-					duration: 0.3,
-					ease: 'back.out(2)',
-				}
+				{scale: 1, opacity: 1, y: 0, duration: 0.3, ease: 'back.out(2)'}
 			);
 		},
 		{dependencies: [productCount]}
 	);
 
+	const handleAddToCart = () => {
+		dispatch(
+			addItem({
+				id,
+				title,
+				price,
+				cartImgSrc,
+				count: productCount,
+			})
+		);
+		setProductCount(0);
+	};
 
 	return (
-		<article
-			className={styles.card}
-			key={id}
-		>
+		<article className={styles.card}>
 			<div className={styles.image}>
 				<img
 					src={imgSrc}
@@ -72,19 +72,15 @@ const OilCard: FC<OilCardProps> = ({
 				</h5>
 
 				<p className={styles.text}>{text}</p>
-				<p className={styles.ingridients}>{ingridients}</p>
 
 				<div className={styles.footer}>
 					<div className={styles.count}>
 						<button
+							type="button"
 							className={styles.btnMinus}
-							aria-label={`decrease product ${title}count`}
+							aria-label={`Уменьшить количество: ${title}`}
 							disabled={productCount < 1}
-							onClick={() => {
-								if (productCount === 0) return;
-								setProductCount((prev) => prev - 1);
-								dispatch(minusItem(id));
-							}}
+							onClick={() => setProductCount((prev) => prev - 1)}
 						>
 							-
 						</button>
@@ -92,15 +88,13 @@ const OilCard: FC<OilCardProps> = ({
 							className={styles.value}
 							ref={itemCountRef}
 						>
-              {productCount}
-            </span>
+							{productCount}
+						</span>
 						<button
+							type="button"
 							className={styles.btnPlus}
-							aria-label={`increase product ${title}count`}
-							onClick={() => {
-								setProductCount((prev) => prev + 1);
-								dispatch(plusItem(id));
-							}}
+							aria-label={`Увеличить количество: ${title}`}
+							onClick={() => setProductCount((prev) => prev + 1)}
 						>
 							+
 						</button>
@@ -110,30 +104,21 @@ const OilCard: FC<OilCardProps> = ({
 						<span>250мл</span>
 						{price} грн
 					</p>
+
 					<Button
 						title="В корзину"
-						aria-label={`add item ${title} to cart`}
+						ariaLabel={`Добавить в корзину: ${title}`}
 						className={styles.btnAdd}
 						color={color}
-						onClick={() => {
-							dispatch(
-								addItem({
-									id,
-									title,
-									price,
-									cartImgSrc,
-									count: productCount,
-								})
-							);
-							setProductCount(0);
-						}}
+						disabled={productCount === 0}
+						onClick={handleAddToCart}
 					/>
 					<Button
 						href="https://web.telegram.org/a/"
 						title="Заказать в ТГ"
 						className={styles.btnOrder}
 						color={color}
-						aria-label="order product in telegramm"
+						ariaLabel={`Заказать в Telegram: ${title}`}
 					/>
 				</div>
 			</div>
