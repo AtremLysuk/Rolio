@@ -1,86 +1,55 @@
-import './HeroItem.scss';
-import type {Color, TSlideData} from '../../sections/Hero/Hero';
-import {FC, useRef, useState, useEffect} from 'react';
-import Button from '../Button/Button';
+import {FC, useEffect, useRef, useState} from 'react';
 import classNames from 'classnames';
-import {useMatchMedia} from '../../Hooks/useMatchMedia';
-import {addItem} from '../../redux/cartSlice';
-import {useAppDispatch} from '../../Hooks/hooks';
 import gsap from 'gsap';
 import {useGSAP} from '@gsap/react';
+import './HeroItem.scss';
+import Button from '../Button/Button';
+import {useMatchMedia} from '../../Hooks/useMatchMedia';
+import {useAppDispatch} from '../../Hooks/hooks';
+import {addItem} from '../../redux/cartSlice';
+import type {Color, TSlideData} from '../../sections/Hero/Hero';
 
 type HeroItemProps = TSlideData & {
-	color: string;
 	isActive: boolean;
-	slideHandlerbyColor: (color: string) => void;
-	setActiveRef: (el: HTMLDivElement | null) => void
-};
-
-type TLink = {
-	title: string;
-	path: string;
-	color: Color;
+	onColorSelect: (color: Color) => void;
 };
 
 const HeroItem: FC<HeroItemProps> = ({
-	                                     id,
-	                                     title,
-	                                     subtitle,
-	                                     text,
-	                                     images,
-	                                     color,
-	                                     price,
-	                                     cartImgSrc,
-	                                     isActive,
-	                                     slideHandlerbyColor,
-	                                     setActiveRef
-                                     }) => {
+	id,
+	title,
+	subtitle,
+	text,
+	images,
+	color,
+	price,
+	cartImgSrc,
+	isActive,
+	onColorSelect,
+}) => {
 	const containerRef = useRef<HTMLDivElement | null>(null);
-	const imagesRef = useRef<HTMLDivElement | null>(null);
 	const countRef = useRef<HTMLSpanElement | null>(null);
+	const tlRef = useRef<gsap.core.Timeline | null>(null);
 	const dispatch = useAppDispatch();
 
 	const [itemCount, setItemCount] = useState(0);
 	const isLaptopWidth = useMatchMedia('(max-width: 900px)');
 
-	const tlRef = useRef<gsap.core.Timeline | null>(null);
-
+	// Анимация появления картинок слайда; запускается, когда слайд становится активным
 	useGSAP(
 		() => {
-			if (!containerRef.current) return;
+			const tl = gsap.timeline({paused: true, defaults: {ease: 'power3.out'}});
 
-			const group = containerRef.current.querySelector('.slide-images__group');
-			if (!group) return;
-
-			const bg = group.querySelector('.slide-images__bg');
-			const bottle = group.querySelector('.slide-images__bottle');
-			const delicius = group.querySelector('.slide-images__delicius');
-
-			const tl = gsap.timeline({
-				paused: true,
-				defaults: {ease: 'power3.out'},
-			});
-
-			if (bg)
-				tl.fromTo(
-					bg,
-					{opacity: 0, scale: 0.2},
-					{opacity: 1, scale: 1, duration: 0.6}
-				);
-
-			if (bottle)
-				tl.fromTo(
-					bottle,
+			tl.fromTo('.slide-images__bg', {opacity: 0, scale: 0.2}, {opacity: 1, scale: 1, duration: 0.6})
+				.fromTo(
+					'.slide-images__bottle',
 					{yPercent: 20, opacity: 0},
 					{yPercent: 0, opacity: 1, duration: 1, ease: 'back.out(1.7)'},
 					'-=0.3'
-				);
-
-			if (delicius)
-				tl.fromTo(
-					delicius,
+				)
+				.fromTo(
+					'.slide-images__delicius',
 					{xPercent: -20, opacity: 0},
-					{xPercent: 0, opacity: 1, duration: 0.7, ease: 'power3.out'},
+					{xPercent: 0, opacity: 1, duration: 0.7},
 					0.8
 				);
 
@@ -91,18 +60,10 @@ const HeroItem: FC<HeroItemProps> = ({
 
 	useGSAP(
 		() => {
-			if (!countRef.current) return;
-
 			gsap.fromTo(
 				countRef.current,
 				{scale: 1.4, opacity: 0, y: -10},
-				{
-					scale: 1,
-					opacity: 1,
-					y: 0,
-					duration: 0.3,
-					ease: 'back.out(2)',
-				}
+				{scale: 1, opacity: 1, y: 0, duration: 0.3, ease: 'back.out(2)'}
 			);
 		},
 		{dependencies: [itemCount]}
@@ -120,43 +81,37 @@ const HeroItem: FC<HeroItemProps> = ({
 		}
 	}, [isActive]);
 
+	const handleAddToCart = () => {
+		dispatch(addItem({id, title, price, cartImgSrc, count: itemCount}));
+		setItemCount(0);
+	};
+
+	const sliderHeader = (
+		<SliderHeader
+			subtitle={subtitle}
+			color={color}
+			onColorSelect={onColorSelect}
+		/>
+	);
+
 	return (
 		<div
-			className={classNames(
-				isActive
-					? 'hero-slide__wrapper hero-slide__wrapper active'
-					: 'hero-slide__wrapper'
-			)}
-			ref={(el) => {
-				containerRef.current = el;
-				if (isActive) setActiveRef(el)
-				if (el) el.inert = !isActive
-			}}
-
-			tabIndex={isActive ? 0 : -1}
-
+			className={classNames('hero-slide__wrapper', {active: isActive})}
+			ref={containerRef}
+			inert={!isActive}
 		>
-			{isLaptopWidth && (
-				<SliderHeader
-					subtitle={subtitle}
-					color={color}
-					slideHandlerbyColor={slideHandlerbyColor}
-				/>
-			)}
+			{isLaptopWidth && sliderHeader}
 
-			<div
-				className="hero-slide__images slide-images"
-				ref={imagesRef}
-			>
+			<div className="hero-slide__images slide-images">
 				<div className="slide-images__group">
 					{images.map((image) => (
 						<img
-							className={classNames(`slide-images__${image.title}`)}
+							className={`slide-images__${image.title}`}
 							src={image.imgSrc}
-							alt={`${title} – ${image.title}`}
+							alt={image.title === 'bottle' ? title : ''}
 							width={image.width}
 							height={image.height}
-							loading="lazy"
+							loading={isActive ? 'eager' : 'lazy'}
 							key={image.title}
 						/>
 					))}
@@ -164,13 +119,7 @@ const HeroItem: FC<HeroItemProps> = ({
 			</div>
 
 			<div className="hero-slide__content">
-				{!isLaptopWidth && (
-					<SliderHeader
-						subtitle={subtitle}
-						color={color}
-						slideHandlerbyColor={slideHandlerbyColor}
-					/>
-				)}
+				{!isLaptopWidth && sliderHeader}
 
 				<div className="slide-body">
 					<h2 className="slide-body__title h1">{title}</h2>
@@ -183,8 +132,9 @@ const HeroItem: FC<HeroItemProps> = ({
 						<button
 							type="button"
 							className="body-count__minus"
+							aria-label={`Уменьшить количество: ${title}`}
 							disabled={itemCount < 1}
-							onClick={() => setItemCount((prev) => Math.max(0, prev - 1))}
+							onClick={() => setItemCount((prev) => prev - 1)}
 						>
 							-
 						</button>
@@ -192,11 +142,12 @@ const HeroItem: FC<HeroItemProps> = ({
 							className="body-count__value"
 							ref={countRef}
 						>
-              {itemCount}
-            </span>
+							{itemCount}
+						</span>
 						<button
 							type="button"
 							className="body-count__plus"
+							aria-label={`Увеличить количество: ${title}`}
 							onClick={() => setItemCount((prev) => prev + 1)}
 						>
 							+
@@ -208,26 +159,16 @@ const HeroItem: FC<HeroItemProps> = ({
 							className="body-buttons-more"
 							title="ПОДРОБНЕЕ"
 							color={color}
-							href="/"
+							href="#oil"
+							ariaLabel={`Подробнее о товаре: ${title}`}
 						/>
 						<Button
 							className="body-buttons-add"
 							title="В КОРЗИНУ"
 							color={color}
-							onClick={() => {
-								if (itemCount > 0) {
-									dispatch(
-										addItem({
-											id,
-											title,
-											price,
-											cartImgSrc,
-											count: itemCount,
-										})
-									);
-									setItemCount(0);
-								}
-							}}
+							ariaLabel={`Добавить в корзину: ${title}`}
+							disabled={itemCount === 0}
+							onClick={handleAddToCart}
 						/>
 					</div>
 				</div>
@@ -240,57 +181,55 @@ export default HeroItem;
 
 // ---------------- SliderHeader ----------------
 
-type HeaderProps = {
+type SliderLink = {
+	title: string;
+	color: Color;
+};
+
+const SLIDER_LINKS: SliderLink[] = [
+	{title: 'Для салата', color: 'green'},
+	{title: 'Итальянское', color: 'emerald'},
+	{title: 'Для мяса', color: 'red'},
+	{title: 'Восточное', color: 'orange'},
+];
+
+type SliderHeaderProps = {
 	subtitle: string;
 	color: Color;
-	slideHandlerbyColor: (color: string) => void;
+	onColorSelect: (color: Color) => void;
 };
 
-const SliderHeader: FC<HeaderProps> = ({
-	                                       subtitle,
-	                                       color,
-	                                       slideHandlerbyColor
-                                       }) => {
-	const slideLinks: TLink[] = [
-		{title: 'Для салата', path: '/', color: 'green'},
-		{title: 'Итальянское', path: '/', color: 'emerald'},
-		{title: 'Для мяса', path: '/', color: 'red'},
-		{title: 'Восточное', path: '/', color: 'orange'},
-	];
+const SliderHeader: FC<SliderHeaderProps> = ({subtitle, color, onColorSelect}) => (
+	<header className="slide__header">
+		<p className={classNames('slide__header-title', `slide__header-title--${color}`)}>
+			{subtitle}
+		</p>
 
-	return (
-		<header className="slide__header">
-			<h3
-				className={classNames(
-					'slide__header-title',
-					`slide__header-title--${color}`
-				)}
-			>
-				{subtitle}
-			</h3>
-
-			<nav className="slide__header-links header-links">
-				<ul>
-					{slideLinks.map((link, index) => (
-						<li
-							className="header-links__item"
-							key={link.title}
+		<nav
+			className="slide__header-links header-links"
+			aria-label="Выбор масла"
+		>
+			<ul>
+				{SLIDER_LINKS.map((link) => (
+					<li
+						className="header-links__item"
+						key={link.color}
+					>
+						<button
+							type="button"
+							className={classNames(
+								'header-links__link',
+								`header-links__link--${link.color}`,
+								{active: color === link.color}
+							)}
+							aria-pressed={color === link.color}
+							onClick={() => onColorSelect(link.color)}
 						>
-							<button
-								className={classNames(
-									'header-links__link',
-									`header-links__link--${link.color}`,
-									color === link.color && 'active'
-								)}
-								onClick={() => slideHandlerbyColor(link.color)}
-							>
-								{link.title}
-							</button>
-						</li>
-					))}
-				</ul>
-
-			</nav>
-		</header>
-	);
-};
+							{link.title}
+						</button>
+					</li>
+				))}
+			</ul>
+		</nav>
+	</header>
+);

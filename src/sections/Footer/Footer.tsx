@@ -1,8 +1,6 @@
 import styles from './Footer.module.scss';
 import { FC } from 'react';
-
-import { headerLinks as footerLinks } from '../Header/Header';
-import MyIcon from '../../components/MyIcon/MyIcon';
+import {headerLinks as footerLinks} from '../Header/headerLinks';
 
 const Footer: FC = () => {
   return (
@@ -13,7 +11,7 @@ const Footer: FC = () => {
             <a
               className={styles.logo}
               href="/"
-              aria-label="logo limk to main page"
+              aria-label="R.olio — на главную"
             >
               <svg
                 width="57"

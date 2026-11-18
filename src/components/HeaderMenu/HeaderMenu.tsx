@@ -1,38 +1,52 @@
-import React, {FC, useEffect} from 'react';
-import styles from './HeaderMenu.module.scss';
+import {Dispatch, FC, SetStateAction, useEffect} from 'react';
 import classNames from 'classnames';
-import type {MenuLinksType} from '../../sections/Header/Header';
 import {useLenis} from 'lenis/react';
+import styles from './HeaderMenu.module.scss';
+import type {MenuLinksType} from '../../sections/Header/headerLinks';
 
 interface HeaderMenuProps {
 	links: MenuLinksType[];
 	isBurgerActive: boolean;
-	setIsBurgerActive: React.Dispatch<React.SetStateAction<boolean>>;
+	setIsBurgerActive: Dispatch<SetStateAction<boolean>>;
 }
 
-const HeaderMenu: FC<HeaderMenuProps> = ({
-	                                         links,
-	                                         isBurgerActive,
-	                                         setIsBurgerActive,
-                                         }) => {
+const HeaderMenu: FC<HeaderMenuProps> = ({links, isBurgerActive, setIsBurgerActive}) => {
 	const lenis = useLenis();
 
+	// Пока меню открыто, страница под ним не скроллится
 	useEffect(() => {
 		if (!lenis) return;
+
 		if (isBurgerActive) {
 			lenis.stop();
 		} else {
 			lenis.start();
 		}
-	}, [isBurgerActive]);
+	}, [lenis, isBurgerActive]);
+
+	// Escape закрывает меню
+	useEffect(() => {
+		if (!isBurgerActive) return;
+
+		const handleEscape = (e: KeyboardEvent) => {
+			if (e.key === 'Escape') setIsBurgerActive(false);
+		};
+
+		document.addEventListener('keydown', handleEscape);
+		return () => document.removeEventListener('keydown', handleEscape);
+	}, [isBurgerActive, setIsBurgerActive]);
 
 	return (
 		<div
 			className={classNames(styles.menuBurgerWrapper, {
 				[styles.active]: isBurgerActive,
 			})}
+			inert={!isBurgerActive}
 		>
-			<nav className={styles.menuBurger}>
+			<nav
+				className={styles.menuBurger}
+				aria-label="Мобильное меню"
+			>
 				<ul className={styles.menuList}>
 					{links.map((el) => (
 						<li

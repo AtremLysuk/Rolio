@@ -15,7 +15,6 @@ interface IAboutItems {
 }
 
 const About: FC = () => {
-	const textRef = useRef<HTMLDivElement | null>(null);
 	const containerRef = useRef<HTMLDivElement | null>(null);
 
 	const aboutItems: IAboutItems[] = [
